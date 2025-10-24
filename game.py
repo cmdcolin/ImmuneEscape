@@ -8,11 +8,11 @@ pygame.init()
 fps = 60
 fpsClock = pygame.time.Clock()
 
-width, height = 640, 480
+width, height = 1000, 800
 screen = pygame.display.set_mode((width, height))
 
 font = pygame.font.Font(None, 74)
-text = font.render("Immune Battle", True, (255, 255, 255))
+text = font.render("Immune Battle", True, (123, 252, 3))
 textRect = text.get_rect()
 textRect.center = (width // 2, height // 2)
 
