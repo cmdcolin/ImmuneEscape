@@ -31,6 +31,20 @@ while start_screen:
     pygame.display.flip()
     fpsClock.tick(fps)
 
+character_screen = True
+while character_screen:
+    screen.fill((255,255,255))
+    for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                character_screen = False
+    
+    pygame.display.flip()
+    fpsClock.tick(fps)
+
+
 
 # Game loop.
 while True:
@@ -40,6 +54,7 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
+    
 
     # Update.
 
