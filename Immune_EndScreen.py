@@ -16,7 +16,7 @@ font = pygame.font.Font(None, 75)
 
 class Background():
       def __init__(self):
-            self.bgimage = pygame.image.load('data/2624574.jpg')
+            self.bgimage = pygame.image.load('data/ImmuneWins.tiff')
             self.rectBGimg = self.bgimage.get_rect()
  
             self.bgY1 = 0
@@ -25,7 +25,7 @@ class Background():
             self.bgY2 = -self.rectBGimg.height
             self.bgX2 = 0
  
-            self.movingDownSpeed = 5
+            self.movingDownSpeed = 2.5
          
       def update(self):
         self.bgY1 += self.movingDownSpeed
@@ -60,7 +60,7 @@ def draw_multiline_text(surface, text, font, color, pos, line_spacing=5):
         y += line.get_height() + line_spacing  # Update y for next line
 
 # Multi-line text to display
-text = "Congratulations you've\nsurvived ImmuneEscape!\nThank you for playing\n\nThis was as an Anastasia, Emma\nWalter, & Colin Production"
+text = "Immune System Wins!\n\nCongratulations you've\nsurvived ImmuneEscape!\nThank you for playing\n\nThis was as an Anastasia, Emma\nWalter, & Colin Production"
 
 background_object = Background()
 
