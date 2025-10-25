@@ -1,42 +1,42 @@
-#Project Description
+# Project Description
 ImmuneEscape is a two-player, turn-based battle game in which each player will choose to play as either the immune system or the pathogen and battle! 
 
-#How To Play
+# How To Play
 This game requires installing the 'pygame' application at https://github.com/pygame/pygame
 
 Run the game and follow the on-screen prompts!
 
-#Code Elements Explained
-##Loading Player Type Dictionaries
+# Code Elements Explained
+## Loading Player Type Dictionaries
 Each player category (immune system or pathogen) is encoded in a dictionary of dictionaries that holds character specific attributes. The structure is as follows:
 Dictionary: Immune System or Pathogen
   Keys: 'Character' Dicitonaries (i.e. virus, bacteria, parasite for the pathogen dictionary)
     Keys: Attributes of the Character (Actions, Damage, Health, Image)
       Lists: Of possible actions, damage amounts, starting health, image path
 
-##Text and Image Import
+## Text and Image Import
 In this section we specify all text that is used and render the text objects for display on the screen.
 We do the same for all images, specifying in the image path and assigning them to variables that can be rendered on the appropriate screen.
 
-##Creating Clickable Icons
+## Creating Clickable Icons
 We created a class of clickable icons that are used during the character selection process
 
-##Drawing Screens
+## Drawing Screens
 We created functions that will 'draw' the desired screens that we use at different points in the game, and then set those states as arbitrary values so that they can be defined and called upon during the game loop.
 
-##Game Loop
-###Start Screen
+## Game Loop
+### Start Screen
 
-###Character Selection Screen
+### Character Selection Screen
 The character selection screen contains clickable icons that will assign player one and player two to either the pathogen or immune system, which they will select themselves. Once the icon is selected, text displaying their choice appears for two seconds before the screen changes to the corresponding selection screen. The icon they click on will choose which screen they will be directed to next by changing the variable 'current_state,' which specifies the screen. 
 
-###Pathogen Selection Screen
+### Pathogen Selection Screen
 The pathogen selection screen will allow the player playing as the pathogen to select their 'character' from three clickable icons: virus, bacteria, and parasite. The icon they click on will then assign their player number (1 or 2) with the corresponding dictionary key for their character. 
 The player number is determined by the order, with the first player to select on the character screen being 'player one.' After player one chooses their character, the screen will progress automatically to the selection screen of the type player one did not choose. 
 
-###Immune System Selection Screen
+### Immune System Selection Screen
 The immune system selection screen will allow the player playing as the immune system to select their 'character' from two clickable icons: innate or adaptive. This screen works the same as the pathogen seleciton screen
 
-###Fight Screen
+### Fight Screen
 
-###End Screen
+### End Screen
