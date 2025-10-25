@@ -81,7 +81,7 @@ immune_background = pygame.image.load('data/light_blue_background.jpg')
 immune_background = pygame.transform.scale(immune_background, (width,height))
 
 #create character classes
-#clickable initial characters
+#clickable characters
 class ClickableSprite(pygame.sprite.Sprite):
     def __init__(self,image_path,x,y):
         super().__init__()
@@ -90,36 +90,6 @@ class ClickableSprite(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=(x, y))
     def when_clicked(self):
         screen.blit(text_path_choice, textRect_path.center)
-
-#clickable options for pathogens
-
-#clickable options for immune system
-
-#pathogen classes
-class Virus:
-    def __init__(self,image_path,x,y):
-        super().__init__()
-        self.image = image_path
-        self.image = pygame.transform.scale(self.image, (300,300))
-        self.rect = self.image.get_rect(topleft=(x,y))
-        self.name = 'Virus'
-        self.health = 80
-        self.max_health = 80
-        self.x = x
-        self.y = y
-    def draw(self,surface):
-        #display name and health
-        name_text = font.render(self.name, True,BLACK)
-        health_text = font.render(f'{self.health} / {self.max_health}', True, BLACK)
-        surface.blit(name_text,self.x,self.y)
-        surface.blit(health_text,self.x,self.y+40)
-        #display a rectangle visual showing health
-        pygame.draw.rect(surface, RED,self.x,self.y+70,200,20)
-        current_health_width = (self.health/self.max_health)*200
-        pygame.draw.rect(surface, BLUE, (self.x, self.y + 70, current_health_width, 20))
-
-
-#immune system classes
 
 #draw screen statuses
 def draw_start_screen():
@@ -211,6 +181,9 @@ while current_state == character_screen:
     pygame.display.flip()
     fpsClock.tick(fps)
 
+player_1_assigned = ''
+player_2_assigned = ''
+all_pathogen_sprites = virus, bacteria, parasite
 #pathogen screen
 while current_state == pathogen_screen:
     draw_pathogen_screen()
@@ -218,10 +191,22 @@ while current_state == pathogen_screen:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-    
+        if event.type == MOUSEBUTTONDOWN:
+            mouse_pos = event.pos
+            for character in all_immune_sprites:
+                if character.rect.collidepoint(mouse_pos):
+                    if player_1_assigned == '':
+                        player_1_assigned = character
+                        current_state = immune_screen
+                    else:
+                        player_2_assigned = character
+        
     pygame.display.flip()
     fpsClock.tick(fps)
 
+player_1_assigned = ''
+player_2_assigned = ''
+all_immune_sprites = innate, adaptive
 #immune system screen
 while current_state == immune_screen:
     draw_immune_screen()
@@ -229,7 +214,16 @@ while current_state == immune_screen:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-    
+        if event.type == MOUSEBUTTONDOWN:
+            mouse_pos = event.pos
+            for character in all_immune_sprites:
+                if character.rect.collidepoint(mouse_pos):
+                    if player_1_assigned == '':
+                        player_1_assigned = 'something'
+                        current_state = pathogen_screen
+                    else:
+                        player_2_assigned = 'something'
+        
     pygame.display.flip()
     fpsClock.tick(fps)
 
