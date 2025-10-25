@@ -81,7 +81,7 @@ def draw_multiline_text(surface, text, font, color, pos, line_spacing=5):
 # Multi-line text to display
 text = "\nWelcome to ImmuneEscape!\n\n\n\n\n\n\n\n\n\n\n\nWhere the outcomes is literally life or death\n PLAY AT YOUR OWN RISK"
 
-# Creates the "Enter" button with its properties
+# Creates the "Enter" button with its properties the hight variable positions the button on the screen
 enter_button = Button("Enter", width // 2 - 100, height - 450, 200, 50, (0, 128, 0), (255, 0, 0), button_font, (255, 255, 255))
 
 # Game end screen loop
