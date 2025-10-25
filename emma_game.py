@@ -1,6 +1,7 @@
 import sys
 import time
 import csv
+from dict_of_dict import *
 
 import pygame
 from pygame.locals import *
@@ -68,6 +69,10 @@ textRect_adaptive = text.get_rect()
 textRect_adaptive.center = (700, 600)
 
 
+#import character dictionaries
+immune_dict = create_dict_of_dict('immune.txt','Immune_Name')
+pathogen_dict = create_dict_of_dict('pathogen.txt','Pathogen_Name')
+
 #load images
 gen_pathogen = pygame.image.load('data/HIV0001.png')
 immune_sys = pygame.image.load('data/PlasmaBCell0001-blue.png')
@@ -82,6 +87,13 @@ immune_background = pygame.image.load('data/light_blue_background.jpg')
 immune_background = pygame.transform.scale(immune_background, (width,height))
 fight_background = pygame.image.load('data/blood.jpeg')
 fight_background = pygame.transform.scale(fight_background, (width,height))
+for key in immune_dict:
+    immune_dict[key]['Loaded_Image'] = pygame.image.load(immune_dict[key]['Image'])
+    immune_dict[key]['Loaded_Image'] = pygame.transform.scale(immune_dict[key]['Loaded_Image'], (300,300))
+for key in pathogen_dict:
+    pathogen_dict[key]['Loaded_Image'] = pygame.image.load(pathogen_dict[key]['Image'])
+    pathogen_dict[key]['Loaded_Image'] = pygame.transform.scale(pathogen_dict[key]['Loaded_Image'], (300,300))
+
 
 #create character classes
 #clickable characters
@@ -93,18 +105,6 @@ class ClickableSprite(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=(x, y))
     def when_clicked(self):
         screen.blit(text_path_choice, textRect_path.center)
-
-#import character dictionaries
-#set dictionary read function
-# def make_dictionary(filepath, primary_key_column, dictionary_name):
-#     dictionary_name = {}
-#     with open(filepath, 'r', newline = '') as tsvfile:
-#         reader = csv.DictReader(tsvfile, delimiter = '/t')
-#         for row in reader:
-#             primary_key = row.pop(primary_key_column)
-#             dictionary_name[primary_key] = row
-#     return dictionary_name
-
 
 
 #draw screen statuses
@@ -214,11 +214,21 @@ while running:
                 for character in all_pathogen_sprites:
                     if character.rect.collidepoint(mouse_pos):
                         if player_1_assigned == '':
-                            player_1_assigned = character
+                            if character == virus:
+                                player_1_assigned = pathogen_dict['Virus']
+                            if character == bacteria:
+                                player_1_assigned = pathogen_dict['Bacteria']
+                            if character == parasite:
+                                player_1_assigned = pathogen_dict['Parasite']
                             current_state = immune_screen
                             transition_time = pygame.time.get_ticks()
                         else:
-                            player_2_assigned = character
+                            if character == virus:
+                                player_2_assigned = pathogen_dict['Virus']
+                            if character == bacteria:
+                                player_2_assigned = pathogen_dict['Bacteria']
+                            if character == parasite:
+                                player_2_assigned = pathogen_dict['Parasite']
                             current_state = fight_screen
     if current_state == immune_screen:
         draw_immune_screen()
@@ -242,16 +252,24 @@ while running:
                 for character in all_immune_sprites:
                     if character.rect.collidepoint(mouse_pos):
                         if player_1_assigned == '':
-                            player_1_assigned = character
+                            if character == innate:
+                                player_1_assigned = immune_dict['Innate']
+                            if character == adaptive:
+                                player_1_assigned = immune_dict['Adaptive']
                             current_state = pathogen_screen
                             transition_time = pygame.time.get_ticks()
                         else:
-                            player_2_assigned = character
+                            if character == innate:
+                                player_2_assigned = immune_dict['Innate']
+                            if character == adaptive:
+                                player_2_assigned = immune_dict['Adaptive']
                             current_state = fight_screen
     if current_state == fight_screen:
         draw_fight_screen()
-        screen.blit(player_1_assigned.image,player_1_assigned.rect)
-        screen.blit(player_2_assigned.image,player_2_assigned.rect)
+        player_1_rect = (100,300)
+        player_2_rect = (800,300)
+        screen.blit(player_1_assigned['Loaded_Image'],player_1_rect)
+        screen.blit(player_2_assigned['Loaded_Image'],player_2_rect)
 
 
     
