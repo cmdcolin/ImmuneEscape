@@ -14,6 +14,10 @@ fpsClock = pygame.time.Clock()
 width, height = 1200, 800
 screen = pygame.display.set_mode((width, height))
 
+#import character dictionaries
+immune_dict = create_dict_of_dict('immune.txt','Immune_Name')
+pathogen_dict = create_dict_of_dict('pathogen.txt','Pathogen_Name')
+
 #text specifications
 font = pygame.font.Font(None, 74)
 
@@ -69,10 +73,6 @@ textRect_adaptive = text.get_rect()
 textRect_adaptive.center = (700, 600)
 
 
-#import character dictionaries
-immune_dict = create_dict_of_dict('immune.txt','Immune_Name')
-pathogen_dict = create_dict_of_dict('pathogen.txt','Pathogen_Name')
-
 #load images
 gen_pathogen = pygame.image.load('data/HIV0001.png')
 immune_sys = pygame.image.load('data/PlasmaBCell0001-blue.png')
@@ -103,8 +103,6 @@ class ClickableSprite(pygame.sprite.Sprite):
         self.image = image_path
         self.image = pygame.transform.scale(self.image, (300,300))
         self.rect = self.image.get_rect(topleft=(x, y))
-    def when_clicked(self):
-        screen.blit(text_path_choice, textRect_path.center)
 
 
 #draw screen statuses
@@ -184,10 +182,8 @@ while running:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if pathogen.rect.collidepoint(event.pos):
                         current_choice = 'pathogen'
-                        pathogen.when_clicked
                         timer = pygame.time.get_ticks()
                     if immune_system.rect.collidepoint(event.pos):
-                        immune_system.when_clicked()
                         current_choice = 'immune'
                         timer = pygame.time.get_ticks()
     if current_state == pathogen_screen:
