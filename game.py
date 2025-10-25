@@ -36,6 +36,7 @@ gen_pathogen = pygame.image.load('HIV0001.png')
 immune_sys = pygame.image.load('BIOART-409/PlasmaBCell0001-blue.png')
 
 #create character classes
+#clickable initial characters
 class ClickableSprite(pygame.sprite.Sprite):
     def __init__(self,image_path,x,y):
         super().__init__()
@@ -44,6 +45,14 @@ class ClickableSprite(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=(x, y))
     def when_clicked(self):
         screen.blit(text_path_choice, textRect_path)
+
+#clickable options for pathogens
+
+#clickable options for immune system
+
+#pathogen classes
+
+#immune system classes
 
 
 start_screen = True
