@@ -1,5 +1,5 @@
-Pathogen_Name	Action	Damage	Image
-Virus	Attack,Mutate	10,-5	data/SARSCoV20003-purple.png
-Bacteria	evade,realease toxins	0,10	data/GramNegativeBacteria0001.png
-Parasite	deactivate immune cells, cause inflimation -4,8 data/TrypanosomaCruzi0001.png
+Pathogen_Name	Action	Damage	Health	Image
+Virus	Attack,Mutate	10,-5	80	data/SARSCoV20003-purple.png
+Bacteria	evade,realease toxins	0,10	100	data/GramNegativeBacteria0001.png
+Parasite	deactivate immune cells,cause inflimation	-4,8	110	data/TrypanosomaCruzi0001.png
 
