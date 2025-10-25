@@ -21,11 +21,16 @@ pathogen_dict = create_dict_of_dict('pathogen.txt','Pathogen_Name')
 #text specifications
 font = pygame.font.Font(None, 74)
 
+font_large=pygame.font.SysFont(None, 60)
+font_medium = pygame.font.SysFont(None,40)
+font_small = pygame.font.SysFont(None, 30)
+
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 RED = (255,0,0)
 BLUE = (0,0,255)
 YELLOW = (0,255,0)
+
 
 #text that appears in the game
 text = font.render("Immune Battle", True, (123, 252, 3))
@@ -38,11 +43,11 @@ textRect_char.center = (500, height // 10)
 
 text_path_choice = font.render('You are the PATHOGEN!', True, (0,0,0))
 textRect_path = text.get_rect()
-textRect_path.center = (500, height // 1.5)
+textRect_path.center = (500, height // 1.3)
 
 text_imm_choice = font.render('You are the IMMUNE SYSTEM!', True, (0,0,0))
 textRect_imm = text.get_rect()
-textRect_imm.center = (450, height // 1.5)
+textRect_imm.center = (450, height // 1.3)
 
 text_virus_choice = font.render('VIRUS', True, (255,255,255))
 textRect_virus = text.get_rect()
@@ -64,11 +69,11 @@ text_p1 = font.render("Choose Player One", True, (255,255,255))
 textRect_p1 = text.get_rect()
 textRect_p1.center = (450, height // 10)
 
-text_innate = font.render("INNATE", True, (0,0,0))
+text_innate = font.render("INNATE", True, (255,255,255))
 textRect_innate = text.get_rect()
 textRect_innate.center = (200, 600)
 
-text_adaptive = font.render("ADAPTIVE", True, (0,0,0))
+text_adaptive = font.render("ADAPTIVE", True, (255,255,255))
 textRect_adaptive = text.get_rect()
 textRect_adaptive.center = (700, 600)
 
@@ -83,7 +88,7 @@ pathogen_background = pygame.image.load('data/dark_image.jpg')
 pathogen_background = pygame.transform.scale(pathogen_background, (width, height))
 innate_image = pygame.image.load('data/NeutrophilNetosis0001.png')
 adaptive_image = pygame.image.load('data/BCellWithIgM0001.png')
-immune_background = pygame.image.load('data/light_blue_background.jpg')
+immune_background = pygame.image.load('data/Immunity2.jpg')
 immune_background = pygame.transform.scale(immune_background, (width,height))
 fight_background = pygame.image.load('data/blood.jpeg')
 fight_background = pygame.transform.scale(fight_background, (width,height))
@@ -124,9 +129,106 @@ def draw_immune_screen():
     screen.blit(immune_background, (0,0))
     screen.blit(text_innate, textRect_innate)
     screen.blit(text_adaptive, textRect_adaptive)
+    
 
-def draw_fight_screen():
+#add a label here
+def render_text_button(text,font,color,x,y):
+    text_surface = font.render(text, True, color)
+    text_rect = text_surface.get_rect(topleft=(x,y))
+    screen.blit(text_surface,(x,y))
+    return text_rect
+
+#function for handling player turns and drawing the fight screen (defines the fight screen)
+def handle_player_turn(player,opponent):
+    global player1_health, player2_health
+    #defining the appearance of the screen
     screen.blit(fight_background, (0,0))
+    render_text_button(f"{player['Name']}'s Turn", font_large, (255, 255, 255), 20, 50)
+    render_text_button(f" {player_1_assigned['Name']}: {player1_health}", font_small, (255, 255, 255), 20, 120)
+    render_text_button(f"{player_2_assigned['Name']}: {player2_health}", font_small, (255, 255, 255), 500, 120)
+    render_text_button("Choose your action:", font_medium, (255, 255, 255), 300, 400)
+    player1_first_rect = render_text_button(f"a:{player_1_assigned['Action'][1]}", font_medium, (255, 0, 0), 100, 600) # Red
+    player1_second_rect = render_text_button(f"s:{player_1_assigned['Action'][2]}", font_medium, (0, 255, 0), 100, 650) # Green
+    player1_thrid_rect = render_text_button(f"d:{player_1_assigned['Action'][3]}", font_medium,(0,200,255), 100, 700)
+    player2_first_rect = render_text_button(f"UP:{player_2_assigned['Action'][1]}", font_medium, (255, 0, 0), 900, 600) # Red
+    player2_second_rect = render_text_button(f"DOWN:{player_2_assigned['Action'][2]}", font_medium, (0, 255, 0), 900, 650) # Green
+    player2_thrid_rect = render_text_button(f"LEFT:{player_2_assigned['Action'][3]}", font_medium,(0,200,255), 900, 700)
+    screen.blit(player_1_assigned['Loaded_Image'],player_1_rect)
+    screen.blit(player_2_assigned['Loaded_Image'],player_2_rect)
+    pygame.display.flip()
+
+    #turn based loops
+    isturnover = False
+    while not isturnover:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if player == 1:
+                    if event.key == pygame.K_a:
+                        damage = player_1_assigned['Damage'][1]
+                        if damage >=1:
+                            player2_health -= damage
+                        else:
+                            player1_health -=damage
+                        isturnover = True
+                    elif event.key == pygame.K_s:
+                            damage = player_1_assigned['Damage'][2]
+                            if damage >=1:
+                                player2_health -= damage
+                            else: 
+                                player1_health -= damage 
+                                isturnover = True
+                    elif event.key == pygame.K_d:
+                            damage = player_1_assigned['Damage'][3]
+                            if damage >=1:
+                                player2_health -= damage
+                            else: 
+                                player1_health -= damage 
+                            isturnover = True
+                elif player == 2:
+                    if event.key == pygame.K_UP:
+                        damage = player_2_assigned['Damage'][1]
+                        if damage >=1:
+                            player1_health -= damage
+                        else:
+                            player2_health -= damage
+                        isturnover = True
+                    elif event.key == pygame.K_DOWN:
+                        damage = player_2_assigned['Damage'][2]
+                        if damage >=1:
+                            player2_health -= damage
+                        else:
+                            player1_health -=damage
+                        isturnover = True
+                    elif event.key == pygame.K_LEFT:
+                        damage = player_2_assigned['Damage'][3]
+                        if damage >=1:
+                            player1_health -= damage
+                        else: 
+                            player2_health -= damage
+        pygame.time.Clock().tick(30)
+
+def player_fight():
+    global current_turn , player1_health, player2_health
+
+    while True:
+        if player1_health<= 0 or player2_health <=0:
+            winner = 'Player 1' if player2_health <= 0 else 'Player 2'
+            screen.fill((0,0,0))
+            winner_text = font_large.render(f"{winner} wins !", True, (0,255,0))
+            winner_text_rect = winner_text.get_rect(center=(screen_width//2, screen_height//2))
+            screen.blit(winner_text, winner_text_rect)
+            pygame.display.flip()
+            pygame.time.wait(3000)
+            break 
+        if current_turn == 1: 
+            handle_player_turn(1,2)
+            current_turn = 2
+        else:
+            handle_player_turn(2,1)
+            current_turn = 1
 
 #game states
 start_screen = 0
@@ -135,8 +237,9 @@ pathogen_screen = 2
 immune_screen = 3
 fight_screen = 4
 
-#choices to set blank
+#choices and turns set
 current_choice = ''
+current_turn = 1
 
 #starting game loop
 running = True
@@ -261,11 +364,12 @@ while running:
                                 player_2_assigned = immune_dict['Adaptive']
                             current_state = fight_screen
     if current_state == fight_screen:
-        draw_fight_screen()
         player_1_rect = (100,300)
         player_2_rect = (800,300)
-        screen.blit(player_1_assigned['Loaded_Image'],player_1_rect)
-        screen.blit(player_2_assigned['Loaded_Image'],player_2_rect)
+        player1_health = player_1_assigned['Health']
+        player2_health = player_2_assigned['Health']
+        handle_player_turn(player_1_assigned,player_2_assigned)
+        player_fight()
 
 
     

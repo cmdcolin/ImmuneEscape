@@ -1,5 +1,5 @@
-Pathogen_Name	Action	Damage	Health	Image
-Virus	Cell Lysis,Tissue Damage ,Mutate	10,10,-5	80	data/SARSCoV20003-purple.png
-Bacteria	Capsule,Exotoxin,Endotoxin	-8,8,8	100	data/GramNegativeBacteria0001.png
-Parasite	Evading,Inflammation,Antigenic Variation	-4,8,-4	110	data/TrypanosomaCruzi0001.png
+Pathogen_Name	Action	Damage	Health	Image	Name
+Virus	Cell Lysis,Tissue Damage ,Mutate	10,10,-5	80	data/SARSCoV20003-purple.png	Virus
+Bacteria	Capsule,Exotoxin,Endotoxin	-8,8,8	100	data/GramNegativeBacteria0001.png	Bacteria
+Parasite	Evading,Inflammation,Antigenic Variation	-4,8,-4	110	data/TrypanosomaCruzi0001.png	Parasite
 
