@@ -9,4 +9,3 @@ def create_dict_of_dict(filepath, primary_key_column):
                 primary_key = row.pop(primary_key_column)
                 nested_dict[primary_key] = row
         return nested_dict   
-print (create_dict_of_dict('pathogen.txt','Pathogen_Name'))
