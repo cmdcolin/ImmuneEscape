@@ -1,5 +1,6 @@
 import sys
 import time
+import csv
 
 import pygame
 from pygame.locals import *
@@ -92,6 +93,19 @@ class ClickableSprite(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=(x, y))
     def when_clicked(self):
         screen.blit(text_path_choice, textRect_path.center)
+
+#import character dictionaries
+#set dictionary read function
+# def make_dictionary(filepath, primary_key_column, dictionary_name):
+#     dictionary_name = {}
+#     with open(filepath, 'r', newline = '') as tsvfile:
+#         reader = csv.DictReader(tsvfile, delimiter = '/t')
+#         for row in reader:
+#             primary_key = row.pop(primary_key_column)
+#             dictionary_name[primary_key] = row
+#     return dictionary_name
+
+
 
 #draw screen statuses
 def draw_start_screen():
