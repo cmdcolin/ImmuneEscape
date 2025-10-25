@@ -25,7 +25,7 @@ class Background():
             self.bgY2 = -self.rectBGimg.height
             self.bgX2 = 0
  
-            self.movingDownSpeed = 5
+            self.movingDownSpeed = 2.5
          
       def update(self):
         self.bgY1 += self.movingDownSpeed
@@ -73,7 +73,7 @@ while end_screen:
     background_object.render(screen)
 
     # Draw multi-line text at the center of the screen
-    draw_multiline_text(screen, text, font, (0, 0, 0), (0, 0))
+    draw_multiline_text(screen, text, font, (255, 255, 255), (0, 0))
 
     # Event handling
     for event in pygame.event.get():

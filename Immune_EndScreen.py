@@ -60,7 +60,7 @@ def draw_multiline_text(surface, text, font, color, pos, line_spacing=5):
         y += line.get_height() + line_spacing  # Update y for next line
 
 # Multi-line text to display
-text = "Immune System Won!\n\nCongratulations you've\nsurvived ImmuneEscape!\nThank you for playing\n\nThis was as an Anastasia, Emma\nWalter, & Colin Production"
+text = "Immune System Wins!\n\nCongratulations you've\nsurvived ImmuneEscape!\nThank you for playing\n\nThis was as an Anastasia, Emma\nWalter, & Colin Production"
 
 background_object = Background()
 
