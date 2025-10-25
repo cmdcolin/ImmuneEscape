@@ -4,13 +4,13 @@ import csv
 from dict_of_dict import *
 pygame.init()
 
-immune_dict=create_dict_of_dict('immune.txt','Immune_Name')
-pathogen_dict=create_dict_of_dict('pathogen.txt','Pathogen_Name')
+# immune_dict=create_dict_of_dict('immune.txt','Immune_Name')
+# pathogen_dict=create_dict_of_dict('pathogen.txt','Pathogen_Name')
 
-screen_width = 800
-screen_height = 600
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption('Text-Based Battle')
+# screen_width = 800
+# screen_height = 600
+# screen = pygame.display.set_mode((screen_width, screen_height))
+# pygame.display.set_caption('Text-Based Battle')
 
 font_large=pygame.font.SysFont(None, 60)
 font_medium = pygame.font.SysFont(None,40)
@@ -34,8 +34,8 @@ font = pygame.font.Font(None,36)
 
 # p1_actions = {}
 
-player1_health = 100
-player2_health = 100
+# player1_health = 100
+# player2_health = 100
 current_turn = 1
 
 
@@ -48,16 +48,19 @@ def render_text_button(text,font,color,x,y):
 def handle_player_turn(player,opponent):
     global player1_health, player2_health
 
-    screen.fill((0, 0, 0)) # Black background
+    #screen.fill((0, 0, 0)) # Black background
     render_text_button(f"{player}'s Turn", font_large, (255, 255, 255), 20, 50)
-    render_text_button(f"Pathogen Health: {player1_health}", font_small, (255, 255, 255), 20, 120)
-    render_text_button(f"Immune System Health: {player2_health}", font_small, (255, 255, 255), 500, 120)
+    render_text_button(f" {player_1_assigned}: {player1_health}", font_small, (255, 255, 255), 20, 120)
+    render_text_button(f"{player_2_assigned}: {player2_health}", font_small, (255, 255, 255), 500, 120)
     render_text_button("Choose your action:", font_medium, (255, 255, 255), 300, 400)
-    attack_rect = render_text_button("[a:Attack]", font_medium, (255, 0, 0), 100, 450) # Red
-    mutate_rect = render_text_button("[d:Mutate]", font_medium, (0, 255, 0), 100, 500) # Green
-    evade_rect = render_text_button("[Evade]", font_medium,(0,200,255), 600, 500)
-    screen.blit(player1_img, (50,screen_height//2 -75))
-    screen.blit(player2_img, (screen_width - 200, screen_height//2 - 75))
+    player1_first_rect = render_text_button(f"a:{player_1_assigned['Action'][1]}", font_medium, (255, 0, 0), 100, 450) # Red
+    player1_second_rect = render_text_button(f"s:{player_1_assigned['Action'][2]}", font_medium, (0, 255, 0), 100, 500) # Green
+    player1_thrid_rect = render_text_button(f"d:{player_1_assigned['Action'][3]}", font_medium,(0,200,255), 100, 550)
+    player2_first_rect = render_text_button(f"UP:{player_2_assigned['Action'][1]}", font_medium, (255, 0, 0), 100, 450) # Red
+    player2_second_rect = render_text_button(f"DOWN:{player_2_assigned['Action'][2]}", font_medium, (0, 255, 0), 100, 500) # Green
+    player2_thrid_rect = render_text_button(f"LEFT:{player_2_assigned['Action'][3]}", font_medium,(0,200,255), 100, 550)
+    #screen.blit(player1_img, (50,screen_height//2 -75))
+    #screen.blit(player2_img, (screen_width - 200, screen_height//2 - 75))
     pygame.display.flip()
 
     isturnover = False
@@ -70,29 +73,54 @@ def handle_player_turn(player,opponent):
                 print(player,event)
                 if player == 1:
                     if event.key == pygame.K_a:
-                        damage = 20
-                        player2_health -= damage
+                        damage = player_1_assigned['Damage'][1]
+                        if damage >=1:
+                            player2_health -= damage
+                        else:
+                            player1_health -=damage
                         isturnover = True
+                    elif event.key == pygame.K_s:
+                            damage = player_1_assigned['Damage'][2]
+                            if damage >=1:
+                                player2_health -= damage
+                            else: 
+                                player1_health -= damage 
+                                isturnover = True
                     elif event.key == pygame.K_d:
-                            amount = 5
-                            player1_health += amount
+                            damage = player_1_assigned['Damage'][3]
+                            if damage >=1:
+                                player2_health -= damage
+                            else: 
+                                player1_health -= damage 
                             isturnover = True
                 elif player == 2:
                     if event.key == pygame.K_UP:
-                        damage = 20
-                        player1_health -= damage
+                        damage = player_2_assigned['Damage'][1]
+                        if damage >=1:
+                            player1_health -= damage
+                        else:
+                            player2_health -= damage
                         isturnover = True
                     elif event.key == pygame.K_DOWN:
-                        amount = 5
-                        player2_health += amount
+                        damage = player_2_assigned['Damage'][2]
+                        if damage >=1:
+                            player2_health -= damage
+                        else:
+                            player1_health -=damage
                         isturnover = True
+                    elif event.key == pygame.K_LEFT:
+                        damage = player_2_assigned['Damage'][3]
+                        if damage >=1:
+                            player1_health -= damage
+                        else: 
+                            player2_health -= damage
         pygame.time.Clock().tick(30)
 
-player2_img = pygame.image.load('data/TCell0001.png').convert_alpha()
-player1_img = pygame.image.load('data/SARSCoV20002.png').convert_alpha()
+# player2_img = pygame.image.load('data/TCell0001.png').convert_alpha()
+# player1_img = pygame.image.load('data/SARSCoV20002.png').convert_alpha()
 
-player1_img = pygame.transform.scale(player1_img, (150,150))
-player2_img = pygame.transform.scale(player2_img, (150,150))
+# player1_img = pygame.transform.scale(player1_img, (150,150))
+# player2_img = pygame.transform.scale(player2_img, (150,150))
 
 
 
