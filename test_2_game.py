@@ -79,6 +79,7 @@ text_adaptive = font.render("ADAPTIVE", True, (255,255,255))
 textRect_adaptive = text.get_rect()
 textRect_adaptive.center = (900, 650)
 
+
 # Multi-line text to display
 text = "\nWelcome to ImmuneEscape!\n\n\n\n\n\n\n\n\n\n\n\nWhere the outcomes is literally life or death\n PLAY AT YOUR OWN RISK"
 
@@ -150,13 +151,18 @@ def render_text_button(text,font,color,x,y):
     return text_rect
 
 #function for handling player turns and drawing the fight screen (defines the fight screen)
+message = ''
+message_timer = 0
+MESSAGE_DURATION = 2000
+clock = pygame.time.Clock()
 def handle_player_turn(player,opponent):
     global player1_health, player2_health
+    global message_timer, message
     #defining the appearance of the screen
     screen.blit(fight_background, (0,0))
     render_text_button(f" {player_1_assigned['Name']}: {player1_health}", font_small, (255, 255, 255), 20, 120)
     render_text_button(f"{player_2_assigned['Name']}: {player2_health}", font_small, (255, 255, 255), 800, 120)
-    render_text_button("Choose your action:", font_medium, (255, 255, 255), 300, 200)
+    render_text_button("Choose your action:", font_medium, (255, 255, 255), 450, 200)
     player1_first_rect = render_text_button(f"a:{player_1_assigned['Action'][0]}", font_medium, (255, 0, 0), 100, 600) # Red
     player1_second_rect = render_text_button(f"s:{player_1_assigned['Action'][1]}", font_medium, (0, 255, 0), 100, 650) # Green
     player1_thrid_rect = render_text_button(f"d:{player_1_assigned['Action'][2]}", font_medium,(0,200,255), 100, 700)
@@ -166,7 +172,6 @@ def handle_player_turn(player,opponent):
     screen.blit(player_1_assigned['Loaded_Image'],player_1_rect)
     screen.blit(player_2_assigned['Loaded_Image'],player_2_rect)
     pygame.display.flip()
-
     #turn based loops
     isturnover = False
     while not isturnover:
@@ -174,56 +179,79 @@ def handle_player_turn(player,opponent):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if current_turn == 1:
-                render_text_button(f"{player_1_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20 , 50)
-            if current_turn == 2:
-                    render_text_button(f"{player_2_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20 , 50)
             if event.type == pygame.KEYDOWN:
                 if current_turn == 1:
                     if event.key == pygame.K_a:
                         damage = int(player_1_assigned['Damage'][0])
                         if damage >= 1:
                             player2_health -= damage
+                            message = f"{player_1_assigned['Name']} dealt {damage} damage!"
                         else:
                             player1_health -= damage
+                            message = f"{player_1_assigned['Name']} healed {abs(damage)} HP!"
+                        message_timer = pygame.time.get_ticks()
                         isturnover = True
                     elif event.key == pygame.K_s:
                         damage = int(player_1_assigned['Damage'][1])
                         if damage >= 1:
                             player2_health -= damage
+                            message = f"{player_1_assigned['Name']} dealt {damage} damage!"   
                         else: 
-                                player1_health -= damage 
+                            player1_health -= damage 
+                            message = f"{player_1_assigned['Name']} healed {abs(damage)} HP!"
+                        message_timer = pygame.time.get_ticks()
                         isturnover = True
                     elif event.key == pygame.K_d:
                         damage = int(player_1_assigned['Damage'][2])
                         if damage >= 1:
                             player2_health -= damage
+                            message = f"{player_1_assigned['Name']} dealt {damage} damage!"   
                         else: 
                             player1_health -= damage 
+                            message = f"{player_1_assigned['Name']} healed {abs(damage)} HP!"
+                        message_timer = pygame.time.get_ticks()
                         isturnover = True
                 elif current_turn == 2:
                     if event.key == pygame.K_UP:
                         damage = int(player_2_assigned['Damage'][0])
                         if damage >= 1:
                             player1_health -= damage
+                            message = f"{player_2_assigned['Name']} dealt {damage} damage!"
                         else:
                             player2_health -= damage
-                        isturnover = True
+                            message = f"{player_2_assigned['Name']} healed {abs(damage)} HP!"
+                        message_timer = pygame.time.get_ticks()
+                        isturnover = True 
                     elif event.key == pygame.K_DOWN:
                         damage = int(player_2_assigned['Damage'][1])
                         if damage >= 1:
                             player1_health -= damage
+                            message = f"{player_2_assigned['Name']} dealt {damage} HP!"
                         else:
                             player2_health -= damage
+                            message = f"{player_2_assigned['Name']} healed {abs(damage)} HP!"
+                        message_timer = pygame.time.get_ticks()
                         isturnover = True
                     elif event.key == pygame.K_LEFT:
                         damage = int(player_2_assigned['Damage'][2])
                         if damage >= 1:
                             player1_health -= damage
+                            message = f"{player_2_assigned['Name']} dealt {damage} HP!"
                         else: 
                             player2_health -= damage
+                            message = f"{player_2_assigned['Name']} healed {abs(damage)} HP!"
+                        message_timer = pygame.time.get_ticks()
                         isturnover = True
-        pygame.time.Clock().tick(30)
+            if current_turn == 1:
+                render_text_button(f"{player_1_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20, 40)
+            else:
+                render_text_button(f"{player_2_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20, 40)
+
+            if pygame.time.get_ticks() - message_timer < MESSAGE_DURATION:
+                render_text_button(message, font_medium, (255,255,0), 470 ,250)
+            pygame.display.update()
+            clock.tick(30)
+
 
 def player_fight():
     global current_turn , player1_health, player2_health
@@ -244,6 +272,7 @@ def player_fight():
         else:
             handle_player_turn(2,1)
             current_turn = 1
+        
 
 # Made a class to create an enter button
 class Button:
