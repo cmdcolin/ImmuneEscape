@@ -6,13 +6,34 @@ from dict_of_dict import *
 import pygame
 from pygame.locals import *
 
+
+###########  Adding sound to this draft of the script. ##################
+
+
+
 pygame.init()
+pygame.mixer.init()
+
 
 fps = 60
 fpsClock = pygame.time.Clock()
 
 width, height = 1200, 800
 screen = pygame.display.set_mode((width, height))
+
+
+################## Adding sound to this draft of the script. ##################
+
+attack_sound = pygame.mixer.Sound("data/blue Beep.mp3")
+attack_sound.set_volume(1.0) # Can't make it louder 
+defense_sound = pygame.mixer.Sound("data/myinstants.mp3")
+defense_sound.set_volume(1.0) # Can't make it louder 
+
+########################### INTRO SONG ##############################################
+sound = pygame.mixer.Sound('data/dramatic.wav')
+sound.set_volume(0.25) # Regulate sound volume
+sound.play(-1, 0) # make the sound goin on a loop. 
+###################################################################################
 
 #import character dictionaries
 immune_dict = create_dict_of_dict('immune.txt','Immune_Name')
@@ -106,12 +127,6 @@ for key in pathogen_dict:
     pathogen_dict[key]['Loaded_Image'] = pygame.image.load(pathogen_dict[key]['Image'])
     pathogen_dict[key]['Loaded_Image'] = pygame.transform.scale(pathogen_dict[key]['Loaded_Image'], (300,300))
 
-# We can add sound to play in
-sound = pygame.mixer.Sound('data/dramatic.wav')
-
-sound.play(-1, 0)
-
-
 #create character classes
 #clickable characters
 class ClickableSprite(pygame.sprite.Sprite):
@@ -186,44 +201,56 @@ def handle_player_turn(player,opponent):
                         damage = int(player_1_assigned['Damage'][0])
                         if damage >= 1:
                             player2_health -= damage
+                            attack_sound.play() ###########################################################
                         else:
                             player1_health -= damage
+                            defense_sound.play() ############################################################
                         isturnover = True
                     elif event.key == pygame.K_s:
                         damage = int(player_1_assigned['Damage'][1])
                         if damage >= 1:
                             player2_health -= damage
+                            attack_sound.play() ###########################################################
                         else: 
-                                player1_health -= damage 
+                            player1_health -= damage 
+                            defense_sound.play() ############################################################
                         isturnover = True
                     elif event.key == pygame.K_d:
                         damage = int(player_1_assigned['Damage'][2])
                         if damage >= 1:
                             player2_health -= damage
+                            attack_sound.play() ###########################################################
                         else: 
                             player1_health -= damage 
+                            defense_sound.play() ############################################################
                         isturnover = True
                 elif current_turn == 2:
                     if event.key == pygame.K_UP:
                         damage = int(player_2_assigned['Damage'][0])
                         if damage >= 1:
                             player1_health -= damage
+                            attack_sound.play() ###########################################################
                         else:
                             player2_health -= damage
+                            defense_sound.play() ############################################################
                         isturnover = True
                     elif event.key == pygame.K_DOWN:
                         damage = int(player_2_assigned['Damage'][1])
                         if damage >= 1:
                             player1_health -= damage
+                            attack_sound.play() ###########################################################
                         else:
                             player2_health -= damage
+                            defense_sound.play() ############################################################
                         isturnover = True
                     elif event.key == pygame.K_LEFT:
                         damage = int(player_2_assigned['Damage'][2])
                         if damage >= 1:
                             player1_health -= damage
+                            attack_sound.play() ###########################################################
                         else: 
                             player2_health -= damage
+                            defense_sound.play() ############################################################
                         isturnover = True
         pygame.time.Clock().tick(30)
 
@@ -264,7 +291,7 @@ class Button:
 
     # Draws the button on the screen
     def draw(self, surface):
-        mouse_pos = pygame.mouse.get_pos()  # Get the current position of the mouse. the mouse position on the screen
+        mouse_pos = pygame.mouse.get_pos()  #Get the current position of the mouse. the mouse position on the screen
         if self.rect.collidepoint(mouse_pos):
             pygame.draw.rect(surface, self.hover_color, self.rect)  #The hover color 
         else:
@@ -456,6 +483,3 @@ while running:
     
     pygame.display.flip()
     fpsClock.tick(fps)
-
-
-    addin sound to this draft 
