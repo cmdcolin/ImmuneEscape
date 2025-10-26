@@ -81,6 +81,8 @@ textRect_adaptive.center = (900, 650)
 
 # Multi-line text to display
 text = "\nWelcome to ImmuneEscape!\n\n\n\n\n\n\n\n\n\n\n\nWhere the outcomes is literally life or death\n PLAY AT YOUR OWN RISK"
+path_text = "Pathogen Wins!\n\nCongratulations you've\nsurvived ImmuneEscape!\nThank you for playing\n\nThis was as an Anastasia, Emma\nWalter, & Colin Production"
+imm_text = "Immune System Wins!\n\nCongratulations you've\nsurvived ImmuneEscape!\nThank you for playing\n\nThis was as an Anastasia, Emma,\nWalter, & Colin Production"
 
 #load images
 gen_pathogen = pygame.image.load('data/HIV0001.png')
@@ -105,8 +107,11 @@ for key in pathogen_dict:
     pathogen_dict[key]['Loaded_Image'] = pygame.image.load(pathogen_dict[key]['Image'])
     pathogen_dict[key]['Loaded_Image'] = pygame.transform.scale(pathogen_dict[key]['Loaded_Image'], (300,300))
 
+
 # We can add sound to play in
 sound = pygame.mixer.Sound('data/dramatic.wav')
+doomsound = pygame.mixer.Sound('data/doom.wav')
+Success_sound = pygame.mixer.Sound('data/Success.mp3')
 
 sound.play(-1, 0)
 
@@ -290,18 +295,24 @@ def handle_player_turn(player,opponent):
 
 
 def player_fight():
-    global current_turn , player1_health, player2_health, total_turns
+    global current_turn , player1_health, player2_health, total_turns, current_state
 
     while True:
         if player1_health<= 0 or player2_health <=0:
-            winner = 'Player 1' if player2_health <= 0 else 'Player 2'
-            screen.fill((0,0,0))
-            winner_text = font_large.render(f"{winner} wins !", True, (0,255,0))
-            winner_text_rect = winner_text.get_rect(center=(width//2, height//2))
-            screen.blit(winner_text, winner_text_rect)
-            pygame.display.flip()
-            pygame.time.wait(3000)
-            break 
+            if player2_health <= 0:
+                if player_1_assigned['Name'] == 'Virus' or player_1_assigned['Name'] == 'Bacteria' or player_1_assigned['Name'] == 'Parasite':
+                    current_state = pathogen_win
+                    break
+                else:
+                    current_state = immune_sys_win
+                    break
+            if player1_health<=0:
+                if player_2_assigned['Name'] == 'Virus' or player_2_assigned['Name'] == 'Bacteria' or player_2_assigned['Name'] == 'Parasite':
+                    current_state = pathogen_win
+                    break
+                else:
+                    current_state = immune_sys_win
+                    break
         if current_turn == 1: 
             total_turns += 1
             render_text_button(f"{player_1_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20 , 50)
@@ -371,6 +382,36 @@ def draw_multiline_text(surface, text, font, color, pos, line_spacing=5):
         surface.blit(line, text_rect)
         y += line.get_height() + line_spacing  # Update y for next line
 
+#creating a background class for the end screens
+class Background():
+      def __init__(self, end_image_path):
+            self.bgimage = pygame.image.load(end_image_path)
+            self.rectBGimg = self.bgimage.get_rect()
+ 
+            self.bgY1 = 0
+            self.bgX1 = 0
+ 
+            self.bgY2 = -self.rectBGimg.height
+            self.bgX2 = 0
+ 
+            self.movingDownSpeed = 2.5
+         
+      def update(self):
+        self.bgY1 += self.movingDownSpeed
+        self.bgY2 += self.movingDownSpeed
+        if self.bgY1 >= self.rectBGimg.height:
+            self.bgY1 = -self.rectBGimg.height
+        if self.bgY2 >= self.rectBGimg.height:
+            self.bgY2 = -self.rectBGimg.height
+             
+      def render(self, surface):
+         surface.blit(self.bgimage, (self.bgX1, self.bgY1))
+         surface.blit(self.bgimage, (self.bgX2, self.bgY2))
+
+#create background objects to use in the end screens, calling on the background class
+background_object_path = Background('data/PathogenImage.jpeg')
+background_object_imm = Background('data/2624574.jpg')
+
 # Creates the "Enter" button with its properties the hight variable positions the button on the screen
 enter_button = Button("Enter", width // 2 - 100, height - 450, 200, 50, (0, 128, 0), (255, 0, 0), button_font, (255, 255, 255))
 
@@ -385,6 +426,8 @@ character_screen = 1
 pathogen_screen = 2
 immune_screen = 3
 fight_screen = 4
+immune_sys_win = 5
+pathogen_win = 6
 
 #starting game loop
 running = True
@@ -520,8 +563,24 @@ while running:
         player1_health = int(player_1_assigned['Health'])
         player2_health = int(player_2_assigned['Health'])
         player_fight()
-
-
+    if current_state == immune_sys_win:
+        #play sound
+        sound.stop()
+        Success_sound.play(-1, 0)
+        #load in background
+        background_object_imm.update()
+        background_object_imm.render(screen)
+        #Draw multi-line text at the center of the screen
+        draw_multiline_text(screen, imm_text, font, (0, 0, 0), (0, 0))
+    if current_state == pathogen_win:
+        #play sound
+        sound.stop()
+        doomsound.play(-1, 0)
+        #load in background
+        background_object_path.update()
+        background_object_path.render(screen)
+        #Draw multi-line text at the center of the screen
+        draw_multiline_text(screen, path_text, font, (255, 255, 255), (0, 0))
     
     pygame.display.flip()
     fpsClock.tick(fps)
