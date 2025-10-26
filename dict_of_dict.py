@@ -19,6 +19,6 @@ def create_dict_of_dict(filename, top_key):
                 'Action': data['Action'].split(','),
                 'Damage': [int(x) for x in data['Damage'].split(',')],
                 'Health': [int(data['Health'])],
-                'Image': [data['Image']],
+                'Image': data['Image'],
                 'Name': [data['Name']] }
     return result
