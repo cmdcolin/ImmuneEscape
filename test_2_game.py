@@ -31,7 +31,8 @@ WHITE = (255,255,255)
 BLACK = (0,0,0)
 RED = (255,0,0)
 BLUE = (0,0,255)
-YELLOW = (0,255,0)
+GREEN = (0,255,0)
+
 
 
 #text that appears in the game
@@ -166,6 +167,7 @@ def render_text_button(text, font, color, x=None, y=0):
 
     screen.blit(text_surface, text_rect)
 
+
 def handle_player_turn(player,opponent):
     global player1_health, player2_health
     global message_timer, message
@@ -183,8 +185,39 @@ def handle_player_turn(player,opponent):
     screen.blit(player_1_assigned['Loaded_Image'],player_1_rect)
     screen.blit(player_2_assigned['Loaded_Image'],player_2_rect)
     pygame.display.flip()
+
+   #created halth bar(has to be right above game loop) 
+    class HealthBar():
+        def __init__(self,x,y,w,h,current_hp,max_hp,font):
+            self.x=x
+            self.y=y
+            self.w=w
+            self.h=h
+            self.hp=current_hp
+            self.max_hp=max_hp
+            self.font = font
+
+        def update(self, new_hp):
+            self.hp = max(0, min(new_hp, self.max_hp))
+
+        def draw(self, surface):
+            ratio = max(0, self.hp / self.max_hp)
+            pygame.draw.rect(surface, "RED",(self.x, self.y, self.w, self.h))
+            pygame.draw.rect(surface, "GREEN", (self.x, self.y, self.w*ratio, self.h))
+
+            hp_text = f"{int(self.hp)}/{self.max_hp}"
+            text_surf = self.font.render(hp_text, True, (255,255,255))
+            text_rect = text_surf.get_rect(center = (self.x + self.w // 2, self.y + self.h//2))
+            surface.blit(text_surf, text_rect)
+
+    health_bar_player1 = HealthBar(20,170,300,40,player1_health,max_player1_health,font_small)
+    health_bar_player2= HealthBar(800,170,300,40,player2_health,max_player2_health,font_small)
+    
+    
     #turn based loops
     isturnover = False
+    # health_bar_player1.draw(screen)
+    # health_bar_player2.draw(screen)
     while not isturnover:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -196,9 +229,11 @@ def handle_player_turn(player,opponent):
                         damage = int(player_1_assigned['Damage'][0])
                         if damage >= 1:
                             player2_health -= damage
+                            health_bar_player2.update(player2_health)
                             message = f"{player_1_assigned['Name']} dealt {damage} damage!"
                         else:
                             player1_health -= damage
+                            health_bar_player1.update(player1_health)
                             message = f"{player_1_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True
@@ -206,9 +241,11 @@ def handle_player_turn(player,opponent):
                         damage = int(player_1_assigned['Damage'][1])
                         if damage >= 1:
                             player2_health -= damage
+                            health_bar_player2.update(player2_health)
                             message = f"{player_1_assigned['Name']} dealt {damage} damage!"   
                         else: 
                             player1_health -= damage 
+                            health_bar_player1.update(player1_health)
                             message = f"{player_1_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True
@@ -216,9 +253,11 @@ def handle_player_turn(player,opponent):
                         damage = int(player_1_assigned['Damage'][2])
                         if damage >= 1:
                             player2_health -= damage
+                            health_bar_player2.update(player2_health)
                             message = f"{player_1_assigned['Name']} dealt {damage} damage!"   
                         else: 
                             player1_health -= damage 
+                            health_bar_player1.update(player1_health)
                             message = f"{player_1_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True
@@ -227,9 +266,11 @@ def handle_player_turn(player,opponent):
                         damage = int(player_2_assigned['Damage'][0])
                         if damage >= 1:
                             player1_health -= damage
+                            health_bar_player1.update(player1_health)
                             message = f"{player_2_assigned['Name']} dealt {damage} damage!"
                         else:
                             player2_health -= damage
+                            health_bar_player2.update(player2_health)
                             message = f"{player_2_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True 
@@ -237,9 +278,11 @@ def handle_player_turn(player,opponent):
                         damage = int(player_2_assigned['Damage'][1])
                         if damage >= 1:
                             player1_health -= damage
+                            health_bar_player1.update(player1_health)
                             message = f"{player_2_assigned['Name']} dealt {damage} HP!"
                         else:
                             player2_health -= damage
+                            health_bar_player2.update(player2_health)
                             message = f"{player_2_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True
@@ -247,12 +290,16 @@ def handle_player_turn(player,opponent):
                         damage = int(player_2_assigned['Damage'][2])
                         if damage >= 1:
                             player1_health -= damage
+                            health_bar_player1.update(player1_health)
                             message = f"{player_2_assigned['Name']} dealt {damage} HP!"
                         else: 
                             player2_health -= damage
+                            health_bar_player2.update(player2_health)
                             message = f"{player_2_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True
+            health_bar_player1.draw(screen)
+            health_bar_player2.draw(screen)
             if current_turn == 1:
                 render_text_button(f"{player_1_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20, 40)
             else:
@@ -260,13 +307,13 @@ def handle_player_turn(player,opponent):
 
             if pygame.time.get_ticks() - message_timer < MESSAGE_DURATION:
                 render_text_button(message, font_medium, (255,255,0), None ,250)
+           
             pygame.display.update()
-            clock.tick(30)
+            clock.tick(300)
 
 
 def player_fight():
     global current_turn , player1_health, player2_health
-
     while True:
         if player1_health<= 0 or player2_health <=0:
             winner = 'Player 1' if player2_health <= 0 else 'Player 2'
@@ -275,7 +322,7 @@ def player_fight():
             winner_text_rect = winner_text.get_rect(center=(width//2, height//2))
             screen.blit(winner_text, winner_text_rect)
             pygame.display.flip()
-            pygame.time.wait(3000)
+            pygame.time.wait(30)
             break 
         if current_turn == 1: 
             handle_player_turn(1,2)
@@ -486,8 +533,10 @@ while running:
     if current_state == fight_screen:
         player_1_rect = (100,300)
         player_2_rect = (800,300)
-        player1_health = int(player_1_assigned['Health'])
-        player2_health = int(player_2_assigned['Health'])
+        max_player1_health = int(player_1_assigned['Health'])
+        max_player2_health = int(player_2_assigned['Health'])
+        player1_health=max_player1_health
+        player2_health=max_player2_health
         #handle_player_turn(player_1_assigned,player_2_assigned)
         player_fight()
 
