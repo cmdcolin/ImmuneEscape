@@ -14,7 +14,6 @@ def create_dict_of_dict(filename, top_key):
             data = dict(zip(header,parts))
             #set top level keys
             key = data[id_col].strip()
-            print(key)
             #build the final dictionary
             result[key] = {
                 'Action': data['Action'].split(','),
@@ -23,5 +22,3 @@ def create_dict_of_dict(filename, top_key):
                 'Image': [data['Image']],
                 'Name': [data['Name']] }
     return result
-
-print(create_dict_of_dict('pathogen.txt','Pathogen_Name'))
