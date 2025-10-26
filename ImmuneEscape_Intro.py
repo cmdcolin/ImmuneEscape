@@ -16,8 +16,7 @@ background_image = pygame.image.load('data/Immune battle.jpg').convert()
 background_image = pygame.transform.scale(background_image, (width, height))
 
 # We can add sound to play in
-sound = pygame.mixer.Sound('disconnect_me.wav')
-
+sound = pygame.mixer.Sound('data/dramatic.wav')
 
 # Text specifications
 font = pygame.font.SysFont(None, 75)
@@ -85,12 +84,11 @@ text = "\nWelcome to ImmuneEscape!\n\n\n\n\n\n\n\n\n\n\n\nWhere the outcomes is 
 # Creates the "Enter" button with its properties the hight variable positions the button on the screen
 enter_button = Button("Enter", width // 2 - 100, height - 450, 200, 50, (0, 128, 0), (255, 0, 0), button_font, (255, 255, 255))
 
-# Game end screen loop
-end_screen = True
+sound.play(-1, 0)
+
+end_screen = True # Game end screen loop
 while end_screen:
     screen.blit(background_image, (0, 0))
-    #plays the sound during the game loop
-    sound.play()
 
     # this is the helper function allowing to write mulitple lines. 
     draw_multiline_text(screen, text, font, (0, 0, 0), (0, 0))
