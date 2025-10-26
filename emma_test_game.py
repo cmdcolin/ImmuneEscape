@@ -125,7 +125,8 @@ class ClickableSprite(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (300,300))
         self.rect = self.image.get_rect(topleft=(x, y))
 
-
+#globally define overlay text so it can be used while drawing screens
+overlay_text = None
 #draw screen statuses
 def draw_start_screen():
     screen.fill((0, 0, 0))
@@ -147,7 +148,7 @@ def draw_immune_screen():
     screen.blit(text_adaptive, textRect_adaptive)
     
 
-#add a label here
+#rendering text function
 def render_text_button(text, font, color, x, y):
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect()
@@ -157,14 +158,8 @@ def render_text_button(text, font, color, x, y):
         text_rect.topleft = (x, y)
     screen.blit(text_surface, text_rect)
 
-#function for handling player turns and drawing the fight screen (defines the fight screen)
-message = ''
-message_timer = 0
-MESSAGE_DURATION = 200
-clock = pygame.time.Clock()
-def handle_player_turn(player,opponent):
-    global player1_health, player2_health, total_turns, message_timer, message
-    #defining the appearance of the screen
+def draw_fight_screen(overlay_text=None,message_text=None):
+    global player1_health, player2_health, player_1_rect, player_2_rect, current_turn
     screen.blit(fight_background, (0,0))
     render_text_button(f" {player_1_assigned['Name']}: {player1_health}", font_small, (255, 255, 255), 20, 120)
     render_text_button(f"{player_2_assigned['Name']}: {player2_health}", font_small, (255, 255, 255), 800, 120)
@@ -177,8 +172,64 @@ def handle_player_turn(player,opponent):
     player2_thrid_rect = render_text_button(f"LEFT:{player_2_assigned['Action'][2]}", font_medium,(0,200,255), 700, 700)
     screen.blit(player_1_assigned['Loaded_Image'],player_1_rect)
     screen.blit(player_2_assigned['Loaded_Image'],player_2_rect)
-    pygame.display.flip()
+    if 'overlay_text' in globals() and overlay_text is not None:
+        render_text_button(overlay_text, font_large, (255,255,255), 20, 40)
+    if message_text is not None:
+        render_text_button(message_text, font_medium, (255,255,0), None, 250) 
 
+
+#function for moving characters during fight
+def attack_mvmt(screen, atacker_image, attacker_rect, direction='right',distance=70,speed=5):
+    original_x = attacker_rect.x
+    #define direction for p1 vs p2
+    if direction == 'right':
+        target_x = original_x + distance
+    else:
+        target_x = original_x - distance
+    # Move forward
+    while attacker_rect.x != target_x:
+        if direction == 'right':
+            attacker_rect.x = min(attacker_rect.x + speed, target_x)
+        else:
+            attacker_rect.x = max(attacker_rect.x - speed, target_x)
+        draw_fight_screen()
+        pygame.display.update()
+        pygame.time.delay(10)
+    # Move back
+    while attacker_rect.x != original_x:
+        if direction == 'right':
+            attacker_rect.x = max(attacker_rect.x - speed, original_x)
+        else:
+            attacker_rect.x = min(attacker_rect.x + speed, original_x)
+        draw_fight_screen()
+        pygame.display.update()
+        pygame.time.delay(10)
+
+def heal_mvmt(screen, atacker_image, attacker_rect,distance=50,speed=5):
+    original_y = attacker_rect.y
+    target_y = original_y - distance
+    # Move up
+    while attacker_rect.y != target_y:
+        attacker_rect.y = max(attacker_rect.y - speed, target_y)
+        draw_fight_screen()
+        pygame.display.update()
+        pygame.time.delay(10)
+    # Move down
+    while attacker_rect.y != original_y:
+        attacker_rect.y = min(attacker_rect.y + speed, original_y)
+        draw_fight_screen()
+        pygame.display.update()
+        pygame.time.delay(10)
+
+
+
+#function for handling player turns
+message = ''
+message_timer = 0
+MESSAGE_DURATION = 200
+clock = pygame.time.Clock()
+def handle_player_turn(player,opponent):
+    global player1_health, player2_health, total_turns, message_timer, message
     #turn based loops
     isturnover = False
     while not isturnover:
@@ -191,6 +242,7 @@ def handle_player_turn(player,opponent):
                     if event.key == pygame.K_a:
                         damage = int(player_1_assigned['Damage'][0])
                         if damage >= 1:
+                            attack_mvmt(screen, player_1_assigned['Loaded_Image'], player_1_rect, direction='right')
                             if total_turns < 5:
                                 player2_health -= damage
                             if 5 <= total_turns < 11:
@@ -209,6 +261,7 @@ def handle_player_turn(player,opponent):
                                     player2_health -= damage
                             message = f"{player_1_assigned['Name']} dealt {damage} damage!"
                         else:
+                            heal_mvmt(screen,player_1_assigned['Loaded_Image'],player_1_rect)
                             player1_health -= damage
                             message = f"{player_1_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
@@ -216,6 +269,7 @@ def handle_player_turn(player,opponent):
                     elif event.key == pygame.K_s:
                         damage = int(player_1_assigned['Damage'][1])
                         if damage >= 1:
+                            attack_mvmt(screen, player_1_assigned['Loaded_Image'], player_1_rect, direction='right')
                             if total_turns < 5:
                                 player2_health -= damage
                             if 5 <= total_turns < 11:
@@ -234,6 +288,7 @@ def handle_player_turn(player,opponent):
                                     player2_health -= damage
                             message = f"{player_1_assigned['Name']} dealt {damage} damage!"
                         else:
+                            heal_mvmt(screen,player_1_assigned['Loaded_Image'],player_1_rect)
                             player1_health -= damage
                             message = f"{player_1_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
@@ -241,6 +296,7 @@ def handle_player_turn(player,opponent):
                     elif event.key == pygame.K_d:
                         damage = int(player_1_assigned['Damage'][2])
                         if damage >= 1:
+                            attack_mvmt(screen, player_1_assigned['Loaded_Image'], player_1_rect, direction='right')
                             if total_turns < 5:
                                 player2_health -= damage
                             if 5 <= total_turns < 11:
@@ -259,6 +315,7 @@ def handle_player_turn(player,opponent):
                                     player2_health -= damage
                             message = f"{player_1_assigned['Name']} dealt {damage} damage!"
                         else:
+                            heal_mvmt(screen,player_1_assigned['Loaded_Image'],player_1_rect)
                             player1_health -= damage
                             message = f"{player_1_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
@@ -267,6 +324,7 @@ def handle_player_turn(player,opponent):
                     if event.key == pygame.K_UP:
                         damage = int(player_2_assigned['Damage'][0])
                         if damage >= 1:
+                            attack_mvmt(screen, player_2_assigned['Loaded_Image'], player_2_rect, direction='left')
                             if total_turns < 5:
                                 player1_health -= damage
                             if 5 <= total_turns < 11:
@@ -285,6 +343,7 @@ def handle_player_turn(player,opponent):
                                     player1_health -= damage
                             message = f"{player_2_assigned['Name']} dealt {damage} damage!"
                         else:
+                            heal_mvmt(screen,player_2_assigned['Loaded_Image'],player_2_rect)
                             player2_health -= damage
                             message = f"{player_2_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
@@ -292,6 +351,7 @@ def handle_player_turn(player,opponent):
                     elif event.key == pygame.K_DOWN:
                         damage = int(player_2_assigned['Damage'][1])
                         if damage >= 1:
+                            attack_mvmt(screen, player_2_assigned['Loaded_Image'], player_2_rect, direction='left')
                             if total_turns < 5:
                                 player1_health -= damage
                             if 5 <= total_turns < 11:
@@ -310,6 +370,7 @@ def handle_player_turn(player,opponent):
                                     player1_health -= damage
                             message = f"{player_2_assigned['Name']} dealt {damage} damage!"
                         else:
+                            heal_mvmt(screen,player_2_assigned['Loaded_Image'],player_2_rect)
                             player2_health -= damage
                             message = f"{player_2_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
@@ -317,6 +378,7 @@ def handle_player_turn(player,opponent):
                     elif event.key == pygame.K_LEFT:
                         damage = int(player_2_assigned['Damage'][2])
                         if damage >= 1:
+                            attack_mvmt(screen, player_2_assigned['Loaded_Image'], player_2_rect, direction='left')
                             if total_turns < 5:
                                 player1_health -= damage
                             if 5 <= total_turns < 11:
@@ -335,28 +397,26 @@ def handle_player_turn(player,opponent):
                                     player1_health -= damage
                             message = f"{player_2_assigned['Name']} dealt {damage} damage!"
                         else:
+                            heal_mvmt(screen,player_2_assigned['Loaded_Image'],player_2_rect)
                             player2_health -= damage
                             message = f"{player_2_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True
-            if current_turn == 1:
-                render_text_button(f"{player_1_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20, 40)
-            else:
-                render_text_button(f"{player_2_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20, 40)
-
             if pygame.time.get_ticks() - message_timer < MESSAGE_DURATION:
                 render_text_button(message, font_medium, (255,255,0), None ,250)
+            draw_fight_screen(overlay_text=overlay_text, message_text=message)
+            if message != '':
+                render_text_button(message, font_medium, (255,255,0), None, 250)
             pygame.display.update()
             clock.tick(30)
 
 
 def player_fight():
-    global current_turn , player1_health, player2_health, total_turns, current_state
-
+    global current_turn , player1_health, player2_health, total_turns, current_state, overlay_text
     while True:
         if current_turn == 1: 
             total_turns += 1
-            render_text_button(f"{player_1_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20 , 50)
+            overlay_text = f"{player_1_assigned['Name']}'s Turn"
             handle_player_turn(1,2)
             if player2_health <= 0:
                 if player_1_assigned['Name'] in ('Virus', 'Bacteria', 'Parasite'):
@@ -367,7 +427,7 @@ def player_fight():
             current_turn = 2
         if current_turn == 2:
             total_turns += 1
-            render_text_button(f"{player_2_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20 , 50)
+            overlay_text = f"{player_2_assigned['Name']}'s Turn"
             handle_player_turn(2,1)
             if player1_health <= 0:
                 if player_2_assigned['Name'] in ('Virus', 'Bacteria', 'Parasite'):
@@ -611,10 +671,11 @@ while running:
                                 player_2_assigned = immune_dict['Adaptive']
                             current_state = fight_screen
     if current_state == fight_screen:
-        player_1_rect = (100,300)
-        player_2_rect = (800,300)
+        player_1_rect = player_1_assigned['Loaded_Image'].get_rect(topleft=(100, 300))
+        player_2_rect = player_2_assigned['Loaded_Image'].get_rect(topleft=(800,300))
         player1_health = int(player_1_assigned['Health'])
         player2_health = int(player_2_assigned['Health'])
+        draw_fight_screen()
         player_fight()
     if current_state == immune_sys_win:
         #play sound
