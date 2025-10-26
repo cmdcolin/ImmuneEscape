@@ -80,25 +80,6 @@ def draw_multiline_text(surface, text, font, color, pos, line_spacing=5):
         y += line.get_height() + line_spacing  # Update y for next line
 
 ################ Adding Game Play Instructions ####################################
-# class Instructions:
-#     def draw_multiline_text2(surface, text, font, color, pos, line_spacing=5):
-#         lines2 = text.splitlines()  # Split the text into lines
-#         y = pos[2]  # Start at the given y position
-
-#         # Render each line and get its rect for centering
-#         rendered_lines = [font.render(line, True, color) for line in lines]
-        
-#         # Compute total height of the text block
-#         total_height = sum(line.get_height() for line in rendered_lines) + (line_spacing * (len(lines) - 1))
-
-#         # Starting y position to center the block vertically
-#         y = (height - total_height) // 10 #alter the hight of the text on the surface screen. 
-
-#         # Now center each line horizontally by adjusting its rect
-#         for line in rendered_lines:
-#             text_rect = line.get_rect(center=(width // 2, y))  # Center horizontally
-#             surface.blit(line, text_rect)
-#             y += line.get_height() + line_spacing  # Update y for next line
 
 # Multi-line text to display
 text = "\nGAMEPLAY\n\n\nHow to play\n\nPlayer 1:\nChoose either Pathogen or Immune cell and then your avatar.\n\nPlayer 2:\nChoose your avatar.\n\nLet the Immune Battle Begin"
