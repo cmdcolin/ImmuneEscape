@@ -16,7 +16,8 @@ background_image = pygame.image.load('data/Immune battle.jpg').convert()
 background_image = pygame.transform.scale(background_image, (width, height))
 
 # We can add sound to play in
-# sound = pygame.mixer.Sound('')
+sound = pygame.mixer.Sound('disconnect_me.wav')
+
 
 # Text specifications
 font = pygame.font.SysFont(None, 75)
@@ -88,6 +89,8 @@ enter_button = Button("Enter", width // 2 - 100, height - 450, 200, 50, (0, 128,
 end_screen = True
 while end_screen:
     screen.blit(background_image, (0, 0))
+    #plays the sound during the game loop
+    sound.play()
 
     # this is the helper function allowing to write mulitple lines. 
     draw_multiline_text(screen, text, font, (0, 0, 0), (0, 0))
