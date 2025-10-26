@@ -155,6 +155,17 @@ message = ''
 message_timer = 0
 MESSAGE_DURATION = 2000
 clock = pygame.time.Clock()
+def render_text_button(text, font, color, x=None, y=0):
+    text_surface = font.render(text, True, color)
+    text_rect = text_surface.get_rect()
+
+    if x is None:
+        text_rect.center = (screen.get_width() // 2, y)
+    else:
+        text_rect.topleft = (x, y)
+
+    screen.blit(text_surface, text_rect)
+
 def handle_player_turn(player,opponent):
     global player1_health, player2_health
     global message_timer, message
@@ -248,7 +259,7 @@ def handle_player_turn(player,opponent):
                 render_text_button(f"{player_2_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20, 40)
 
             if pygame.time.get_ticks() - message_timer < MESSAGE_DURATION:
-                render_text_button(message, font_medium, (255,255,0), 470 ,250)
+                render_text_button(message, font_medium, (255,255,0), None ,250)
             pygame.display.update()
             clock.tick(30)
 
