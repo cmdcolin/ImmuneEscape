@@ -5,6 +5,7 @@ import sys
 
 pygame.init()
 pygame.mixer.init() # for adding sound. 
+pygame.font.init()
 
 fps = 60
 fpsClock = pygame.time.Clock()
@@ -12,7 +13,7 @@ fpsClock = pygame.time.Clock()
 # Sets up the pygame surface aka the screen we see. 
 width, height = 1200, 800
 screen = pygame.display.set_mode((width, height))
-background_image = pygame.image.load('data/Immune battle.jpg').convert()
+background_image = pygame.image.load('data/Immune battle.jpg')
 background_image = pygame.transform.scale(background_image, (width, height))
 
 # We can add sound to play in
