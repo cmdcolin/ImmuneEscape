@@ -151,9 +151,10 @@ def render_text_button(text,font,color,x,y):
 
 #function for handling player turns and drawing the fight screen (defines the fight screen)
 def handle_player_turn(player,opponent):
-    global player1_health, player2_health
+    global player1_health, player2_health, total_turns
     #defining the appearance of the screen
     screen.blit(fight_background, (0,0))
+
     render_text_button(f" {player_1_assigned['Name']}: {player1_health}", font_small, (255, 255, 255), 20, 120)
     render_text_button(f"{player_2_assigned['Name']}: {player2_health}", font_small, (255, 255, 255), 800, 120)
     render_text_button("Choose your action:", font_medium, (255, 255, 255), 300, 200)
@@ -174,30 +175,59 @@ def handle_player_turn(player,opponent):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if current_turn == 1:
-                render_text_button(f"{player_1_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20 , 50)
-            if current_turn == 2:
-                    render_text_button(f"{player_2_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20 , 50)
             if event.type == pygame.KEYDOWN:
                 if current_turn == 1:
                     if event.key == pygame.K_a:
                         damage = int(player_1_assigned['Damage'][0])
                         if damage >= 1:
-                            player2_health -= damage
+                            if total_turns < 5:
+                                player2_health -= damage
+                            if 5 <= total_turns < 11:
+                                if player_1_assigned['Name'] == 'Adaptive Immune System':
+                                    player2_health -= (damage + 2)
+                                else:
+                                    player2_health -= (damage - 1)
+                            if total_turns >= 11:
+                                if player_1_assigned['Name'] == 'Adaptive Immune System':
+                                    player2_health -= (damage + 3)
+                                else:
+                                    player2_health -= (damage - 2)
                         else:
                             player1_health -= damage
                         isturnover = True
                     elif event.key == pygame.K_s:
                         damage = int(player_1_assigned['Damage'][1])
                         if damage >= 1:
-                            player2_health -= damage
+                            if total_turns < 5:
+                                player2_health -= damage
+                            if 5 <= total_turns < 11:
+                                if player_1_assigned['Name'] == 'Adaptive Immune System':
+                                    player2_health -= (damage + 2)
+                                else:
+                                    player2_health -= (damage - 1)
+                            if total_turns >= 11:
+                                if player_1_assigned['Name'] == 'Adaptive Immune System':
+                                    player2_health -= (damage + 3)
+                                else:
+                                    player2_health -= (damage - 2)
                         else: 
                                 player1_health -= damage 
                         isturnover = True
                     elif event.key == pygame.K_d:
                         damage = int(player_1_assigned['Damage'][2])
                         if damage >= 1:
-                            player2_health -= damage
+                            if total_turns < 5:
+                                player2_health -= damage
+                            if 5 <= total_turns < 11:
+                                if player_1_assigned['Name'] == 'Adaptive Immune System':
+                                    player2_health -= (damage + 2)
+                                else:
+                                    player2_health -= (damage - 1)
+                            if total_turns >= 11:
+                                if player_1_assigned['Name'] == 'Adaptive Immune System':
+                                    player2_health -= (damage + 3)
+                                else:
+                                    player2_health -= (damage - 2)
                         else: 
                             player1_health -= damage 
                         isturnover = True
@@ -205,28 +235,62 @@ def handle_player_turn(player,opponent):
                     if event.key == pygame.K_UP:
                         damage = int(player_2_assigned['Damage'][0])
                         if damage >= 1:
-                            player1_health -= damage
+                            if total_turns < 5:
+                                player1_health -= damage
+                            if 5 <= total_turns < 11:
+                                if player_2_assigned['Name'] == 'Adaptive Immune System':
+                                    player1_health -= (damage + 2)
+                                else:
+                                    player1_health -= (damage - 1)
+                            if total_turns >= 11:
+                                if player_2_assigned['Name'] == 'Adaptive Immune System':
+                                    player1_health -= (damage + 3)
+                                else:
+                                    player1_health -= (damage - 2)
                         else:
                             player2_health -= damage
                         isturnover = True
                     elif event.key == pygame.K_DOWN:
                         damage = int(player_2_assigned['Damage'][1])
                         if damage >= 1:
-                            player1_health -= damage
+                            if total_turns < 5:
+                                player1_health -= damage
+                            if 5 <= total_turns < 11:
+                                if player_2_assigned['Name'] == 'Adaptive Immune System':
+                                    player1_health -= (damage + 2)
+                                else:
+                                    player1_health -= (damage - 1)
+                            if total_turns >= 11:
+                                if player_2_assigned['Name'] == 'Adaptive Immune System':
+                                    player1_health -= (damage + 3)
+                                else:
+                                    player1_health -= (damage - 2)
                         else:
                             player2_health -= damage
                         isturnover = True
                     elif event.key == pygame.K_LEFT:
                         damage = int(player_2_assigned['Damage'][2])
                         if damage >= 1:
-                            player1_health -= damage
+                            if total_turns < 5:
+                                player1_health -= damage
+                            if 5 <= total_turns < 11:
+                                if player_2_assigned['Name'] == 'Adaptive Immune System':
+                                    player1_health -= (damage + 2)
+                                else:
+                                    player1_health -= (damage - 1)
+                            if total_turns >= 11:
+                                if player_2_assigned['Name'] == 'Adaptive Immune System':
+                                    player1_health -= (damage + 3)
+                                else:
+                                    player1_health -= (damage - 2)
                         else: 
                             player2_health -= damage
                         isturnover = True
         pygame.time.Clock().tick(30)
 
+
 def player_fight():
-    global current_turn , player1_health, player2_health
+    global current_turn , player1_health, player2_health, total_turns
 
     while True:
         if player1_health<= 0 or player2_health <=0:
@@ -239,11 +303,17 @@ def player_fight():
             pygame.time.wait(3000)
             break 
         if current_turn == 1: 
+            total_turns += 1
+            render_text_button(f"{player_1_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20 , 50)
             handle_player_turn(1,2)
             current_turn = 2
-        else:
+        if current_turn == 2:
+            total_turns += 1
+            render_text_button(f"{player_2_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20 , 50)
             handle_player_turn(2,1)
             current_turn = 1
+        
+
 
 # Made a class to create an enter button
 class Button:
@@ -304,16 +374,17 @@ def draw_multiline_text(surface, text, font, color, pos, line_spacing=5):
 # Creates the "Enter" button with its properties the hight variable positions the button on the screen
 enter_button = Button("Enter", width // 2 - 100, height - 450, 200, 50, (0, 128, 0), (255, 0, 0), button_font, (255, 255, 255))
 
+#choices and turns set
+current_choice = ''
+current_turn = 1
+total_turns = 0
+
 #game states
 start_screen = 0
 character_screen = 1
 pathogen_screen = 2
 immune_screen = 3
 fight_screen = 4
-
-#choices and turns set
-current_choice = ''
-current_turn = 1
 
 #starting game loop
 running = True
@@ -448,7 +519,6 @@ while running:
         player_2_rect = (800,300)
         player1_health = int(player_1_assigned['Health'])
         player2_health = int(player_2_assigned['Health'])
-        #handle_player_turn(player_1_assigned,player_2_assigned)
         player_fight()
 
 

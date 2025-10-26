@@ -51,31 +51,31 @@ textRect_imm.center = (450, height // 1.3)
 
 text_virus_choice = font.render('VIRUS', True, (255,255,255))
 textRect_virus = text.get_rect()
-textRect_virus = (150, 600)
+textRect_virus = (150, 650)
 
 text_bacteria_choice = font.render('BACTERIA', True, (255,255,255))
 textRect_bacteria = text.get_rect()
-textRect_bacteria = (500, 600)
+textRect_bacteria = (450, 650)
 
 text_parasite_choice = font.render('PARASITE', True, (255,255,255))
 textRect_parasite = text.get_rect()
-textRect_parasite = (900, 600)
+textRect_parasite = (820, 650)
 
 text_p2 = font.render("Choose Player Two", True, (255,255,255))
 textRect_p2 = text.get_rect()
-textRect_p2.center = (500, height // 10)
+textRect_p2.center = (550, height // 10)
 
 text_p1 = font.render("Choose Player One", True, (255,255,255))
 textRect_p1 = text.get_rect()
-textRect_p1.center = (450, height // 10)
+textRect_p1.center = (550, height // 10)
 
 text_innate = font.render("INNATE", True, (255,255,255))
 textRect_innate = text.get_rect()
-textRect_innate.center = (200, 600)
+textRect_innate.center = (400, 700)
 
 text_adaptive = font.render("ADAPTIVE", True, (255,255,255))
 textRect_adaptive = text.get_rect()
-textRect_adaptive.center = (700, 600)
+textRect_adaptive.center = (900, 700)
 
 
 #load images
@@ -291,9 +291,9 @@ while running:
                         timer = pygame.time.get_ticks()
     if current_state == pathogen_screen:
         draw_pathogen_screen()
-        virus = ClickableSprite(virus_image, 100, 300)
-        bacteria = ClickableSprite(bacteria_image, 500, 300)
-        parasite = ClickableSprite(parasite_image, 900,300)
+        virus = ClickableSprite(virus_image, 80, 300)
+        bacteria = ClickableSprite(bacteria_image, 450, 300)
+        parasite = ClickableSprite(parasite_image, 800,300)
         all_pathogen_sprites = virus, bacteria, parasite
         screen.blit(virus.image,virus.rect)
         screen.blit(bacteria.image,bacteria.rect)

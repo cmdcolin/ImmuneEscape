@@ -1,3 +1,3 @@
 Immune_Name	Action	Damage	Health	Image	Name
-Innate	Phagocytosis (Attack),Oxidative Burst (Attack),Granzyme Release (Attack)	7,7,7	100	data/NeutrophilNetosis0001.png	Innate Immune System
-Adaptive	Antibody Release (Attack),Cytotoxic T Cell (Attack),Helper_T_Cell (Defensive)	5,10,-5	80	data/BCellWithIgM0001.png	Adaptive Immune System
+Innate	Phagocytosis (Attack),Oxidative Burst (Attack),Granzyme Release (Attack)	8,8,8	100	data/NeutrophilNetosis0001.png	Innate Immune System
+Adaptive	Antibody Release (Attack),Cytotoxic T Cell (Attack),Helper T Cell (Defensive)	7,7,-5	80	data/BCellWithIgM0001.png	Adaptive Immune System
