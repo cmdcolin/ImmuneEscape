@@ -4,6 +4,7 @@ import pygame
 import sys
 
 pygame.init()
+pygame.mixer.init()
 
 fps = 60
 fpsClock = pygame.time.Clock()
@@ -14,9 +15,12 @@ screen = pygame.display.set_mode((width, height))
 # Text specifications
 font = pygame.font.Font(None, 75)
 
+#make the viriable for sound.
+Success_sound = pygame.mixer.Sound('data/Success.mp3')
+
 class Background():
       def __init__(self):
-            self.bgimage = pygame.image.load('data/ImmuneWins.tiff')
+            self.bgimage = pygame.image.load('data/2624574.jpg')
             self.rectBGimg = self.bgimage.get_rect()
  
             self.bgY1 = 0
@@ -60,9 +64,11 @@ def draw_multiline_text(surface, text, font, color, pos, line_spacing=5):
         y += line.get_height() + line_spacing  # Update y for next line
 
 # Multi-line text to display
-text = "Immune System Wins!\n\nCongratulations you've\nsurvived ImmuneEscape!\nThank you for playing\n\nThis was as an Anastasia, Emma\nWalter, & Colin Production"
+text = "Immune System Wins!\n\nCongratulations you've\nsurvived ImmuneEscape!\nThank you for playing\n\nThis was as an Anastasia, Emma,\nWalter, & Colin Production"
 
 background_object = Background()
+
+Success_sound.play(-1, 0) #plays the music
 
 # Game end screen loop
 end_screen = True
