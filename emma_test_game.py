@@ -168,7 +168,7 @@ def handle_player_turn(player,opponent):
     screen.blit(fight_background, (0,0))
     render_text_button(f" {player_1_assigned['Name']}: {player1_health}", font_small, (255, 255, 255), 20, 120)
     render_text_button(f"{player_2_assigned['Name']}: {player2_health}", font_small, (255, 255, 255), 800, 120)
-    render_text_button("Choose your action:", font_medium, (255, 255, 255), 300, 200)
+    render_text_button("Choose your action:", font_medium, (255, 255, 255), 450, 200)
     player1_first_rect = render_text_button(f"a:{player_1_assigned['Action'][0]}", font_medium, (255, 0, 0), 100, 600) # Red
     player1_second_rect = render_text_button(f"s:{player_1_assigned['Action'][1]}", font_medium, (0, 255, 0), 100, 650) # Green
     player1_thrid_rect = render_text_button(f"d:{player_1_assigned['Action'][2]}", font_medium,(0,200,255), 100, 700)
