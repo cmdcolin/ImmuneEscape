@@ -99,7 +99,6 @@ fight_background = pygame.transform.scale(fight_background, (width,height))
 background_image = pygame.image.load('data/Immune battle.jpg').convert()
 background_image = pygame.transform.scale(background_image, (width, height))
 for key in immune_dict:
-    print(immune_dict[key]['Image'])
     immune_dict[key]['Loaded_Image'] = pygame.image.load(immune_dict[key]['Image'])
     immune_dict[key]['Loaded_Image'] = pygame.transform.scale(immune_dict[key]['Loaded_Image'], (300,300))
 for key in pathogen_dict:
@@ -155,7 +154,6 @@ def handle_player_turn(player,opponent):
     global player1_health, player2_health
     #defining the appearance of the screen
     screen.blit(fight_background, (0,0))
-
     render_text_button(f" {player_1_assigned['Name']}: {player1_health}", font_small, (255, 255, 255), 20, 120)
     render_text_button(f"{player_2_assigned['Name']}: {player2_health}", font_small, (255, 255, 255), 800, 120)
     render_text_button("Choose your action:", font_medium, (255, 255, 255), 300, 200)
