@@ -310,7 +310,7 @@ def handle_player_turn(player,opponent):
                                     player1_health -= damage
                             message = f"{player_2_assigned['Name']} dealt {damage} damage!"
                         else:
-                            player1_health -= damage
+                            player2_health -= damage
                             message = f"{player_2_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True
@@ -335,7 +335,7 @@ def handle_player_turn(player,opponent):
                                     player1_health -= damage
                             message = f"{player_2_assigned['Name']} dealt {damage} damage!"
                         else:
-                            player1_health -= damage
+                            player2_health -= damage
                             message = f"{player_2_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True
