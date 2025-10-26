@@ -93,6 +93,7 @@ immune_background = pygame.transform.scale(immune_background, (width,height))
 fight_background = pygame.image.load('data/blood.jpeg')
 fight_background = pygame.transform.scale(fight_background, (width,height))
 for key in immune_dict:
+    print(immune_dict[key]['Image'])
     immune_dict[key]['Loaded_Image'] = pygame.image.load(immune_dict[key]['Image'])
     immune_dict[key]['Loaded_Image'] = pygame.transform.scale(immune_dict[key]['Loaded_Image'], (300,300))
 for key in pathogen_dict:
@@ -143,16 +144,16 @@ def handle_player_turn(player,opponent):
     global player1_health, player2_health
     #defining the appearance of the screen
     screen.blit(fight_background, (0,0))
-    render_text_button(f"{player['Name']}'s Turn", font_large, (255, 255, 255), 20, 50)
+
     render_text_button(f" {player_1_assigned['Name']}: {player1_health}", font_small, (255, 255, 255), 20, 120)
-    render_text_button(f"{player_2_assigned['Name']}: {player2_health}", font_small, (255, 255, 255), 500, 120)
-    render_text_button("Choose your action:", font_medium, (255, 255, 255), 300, 400)
-    player1_first_rect = render_text_button(f"a:{player_1_assigned['Action'][1]}", font_medium, (255, 0, 0), 100, 600) # Red
-    player1_second_rect = render_text_button(f"s:{player_1_assigned['Action'][2]}", font_medium, (0, 255, 0), 100, 650) # Green
-    player1_thrid_rect = render_text_button(f"d:{player_1_assigned['Action'][3]}", font_medium,(0,200,255), 100, 700)
-    player2_first_rect = render_text_button(f"UP:{player_2_assigned['Action'][1]}", font_medium, (255, 0, 0), 900, 600) # Red
-    player2_second_rect = render_text_button(f"DOWN:{player_2_assigned['Action'][2]}", font_medium, (0, 255, 0), 900, 650) # Green
-    player2_thrid_rect = render_text_button(f"LEFT:{player_2_assigned['Action'][3]}", font_medium,(0,200,255), 900, 700)
+    render_text_button(f"{player_2_assigned['Name']}: {player2_health}", font_small, (255, 255, 255), 800, 120)
+    render_text_button("Choose your action:", font_medium, (255, 255, 255), 300, 200)
+    player1_first_rect = render_text_button(f"a:{player_1_assigned['Action'][0]}", font_medium, (255, 0, 0), 100, 600) # Red
+    player1_second_rect = render_text_button(f"s:{player_1_assigned['Action'][1]}", font_medium, (0, 255, 0), 100, 650) # Green
+    player1_thrid_rect = render_text_button(f"d:{player_1_assigned['Action'][2]}", font_medium,(0,200,255), 100, 700)
+    player2_first_rect = render_text_button(f"UP:{player_2_assigned['Action'][0]}", font_medium, (255, 0, 0), 700, 600) # Red
+    player2_second_rect = render_text_button(f"DOWN:{player_2_assigned['Action'][1]}", font_medium, (0, 255, 0), 700, 650) # Green
+    player2_thrid_rect = render_text_button(f"LEFT:{player_2_assigned['Action'][2]}", font_medium,(0,200,255), 700, 700)
     screen.blit(player_1_assigned['Loaded_Image'],player_1_rect)
     screen.blit(player_2_assigned['Loaded_Image'],player_2_rect)
     pygame.display.flip()
@@ -164,50 +165,55 @@ def handle_player_turn(player,opponent):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if current_turn == 1:
+                render_text_button(f"{player_1_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20 , 50)
+            if current_turn == 2:
+                    render_text_button(f"{player_2_assigned['Name']}'s Turn", font_large, (255, 255, 255), 20 , 50)
             if event.type == pygame.KEYDOWN:
-                if player == 1:
+                if current_turn == 1:
                     if event.key == pygame.K_a:
-                        damage = player_1_assigned['Damage'][1]
-                        if damage >=1:
+                        damage = int(player_1_assigned['Damage'][0])
+                        if damage >= 1:
                             player2_health -= damage
                         else:
-                            player1_health -=damage
+                            player1_health -= damage
                         isturnover = True
                     elif event.key == pygame.K_s:
-                            damage = player_1_assigned['Damage'][2]
-                            if damage >=1:
-                                player2_health -= damage
-                            else: 
+                        damage = int(player_1_assigned['Damage'][1])
+                        if damage >= 1:
+                            player2_health -= damage
+                        else: 
                                 player1_health -= damage 
-                                isturnover = True
+                        isturnover = True
                     elif event.key == pygame.K_d:
-                            damage = player_1_assigned['Damage'][3]
-                            if damage >=1:
-                                player2_health -= damage
-                            else: 
-                                player1_health -= damage 
-                            isturnover = True
-                elif player == 2:
+                        damage = int(player_1_assigned['Damage'][2])
+                        if damage >= 1:
+                            player2_health -= damage
+                        else: 
+                            player1_health -= damage 
+                        isturnover = True
+                elif current_turn == 2:
                     if event.key == pygame.K_UP:
-                        damage = player_2_assigned['Damage'][1]
-                        if damage >=1:
+                        damage = int(player_2_assigned['Damage'][0])
+                        if damage >= 1:
                             player1_health -= damage
                         else:
                             player2_health -= damage
                         isturnover = True
                     elif event.key == pygame.K_DOWN:
-                        damage = player_2_assigned['Damage'][2]
-                        if damage >=1:
-                            player2_health -= damage
+                        damage = int(player_2_assigned['Damage'][1])
+                        if damage >= 1:
+                            player1_health -= damage
                         else:
-                            player1_health -=damage
+                            player2_health -= damage
                         isturnover = True
                     elif event.key == pygame.K_LEFT:
-                        damage = player_2_assigned['Damage'][3]
-                        if damage >=1:
+                        damage = int(player_2_assigned['Damage'][2])
+                        if damage >= 1:
                             player1_health -= damage
                         else: 
                             player2_health -= damage
+                        isturnover = True
         pygame.time.Clock().tick(30)
 
 def player_fight():
@@ -218,7 +224,7 @@ def player_fight():
             winner = 'Player 1' if player2_health <= 0 else 'Player 2'
             screen.fill((0,0,0))
             winner_text = font_large.render(f"{winner} wins !", True, (0,255,0))
-            winner_text_rect = winner_text.get_rect(center=(screen_width//2, screen_height//2))
+            winner_text_rect = winner_text.get_rect(center=(width//2, height//2))
             screen.blit(winner_text, winner_text_rect)
             pygame.display.flip()
             pygame.time.wait(3000)
@@ -366,9 +372,9 @@ while running:
     if current_state == fight_screen:
         player_1_rect = (100,300)
         player_2_rect = (800,300)
-        player1_health = player_1_assigned['Health']
-        player2_health = player_2_assigned['Health']
-        handle_player_turn(player_1_assigned,player_2_assigned)
+        player1_health = int(player_1_assigned['Health'])
+        player2_health = int(player_2_assigned['Health'])
+        #handle_player_turn(player_1_assigned,player_2_assigned)
         player_fight()
 
 
