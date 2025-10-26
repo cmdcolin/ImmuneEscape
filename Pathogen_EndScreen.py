@@ -3,7 +3,8 @@
 import pygame
 import sys
 
-pygame.init()
+pygame.init() #initialize the game
+pygame.mixer.init() # for adding sound. 
 
 fps = 60
 fpsClock = pygame.time.Clock()
@@ -13,6 +14,11 @@ screen = pygame.display.set_mode((width, height))
 
 # Text specifications
 font = pygame.font.Font(None, 75)
+
+
+#make the viriable for sound.
+doomsound = pygame.mixer.Sound('data/doom.wav')
+
 
 class Background():
       def __init__(self):
@@ -63,6 +69,8 @@ def draw_multiline_text(surface, text, font, color, pos, line_spacing=5):
 text = "Pathogen Wins!\n\nCongratulations you've\nsurvived ImmuneEscape!\nThank you for playing\n\nThis was as an Anastasia, Emma\nWalter, & Colin Production"
 
 background_object = Background()
+
+doomsound.play(-1, 0) #plays the music
 
 # Game end screen loop
 end_screen = True
