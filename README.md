@@ -1,3 +1,6 @@
+
+<img width="1189" height="790" alt="Start screen" src="https://github.com/user-attachments/assets/b69f3bc4-6b59-48dc-b229-464b650d4036" />
+
 # Project Description
 ImmuneEscape is a two-player, turn-based battle game in which each player will choose to play as either the immune system or the pathogen and battle! 
 
