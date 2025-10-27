@@ -90,6 +90,8 @@ immune_sys = pygame.image.load('data/PlasmaBCell0001-blue.png')
 bacteria_image = pygame.image.load('data/GramNegativeBacteria0001.png')
 virus_image = pygame.image.load('data/SARSCoV20003-purple.png')
 parasite_image = pygame.image.load('data/TrypanosomaCruzi0001.png')
+choose_character_background = pygame.image.load ('data/4851806.jpg')
+choose_character_background = pygame.transform.scale(choose_character_background, (width,height))
 pathogen_background = pygame.image.load('data/dark_image.jpg')
 pathogen_background = pygame.transform.scale(pathogen_background, (width, height))
 innate_image = pygame.image.load('data/NeutrophilNetosis0001.png')
@@ -166,10 +168,10 @@ def draw_fight_screen(overlay_text=None,message_text=None):
     render_text_button("Choose your action:", font_medium, (255, 255, 255), 450, 200)
     player1_first_rect = render_text_button(f"a:{player_1_assigned['Action'][0]}", font_medium, (0,255,255), 100, 600) # Red
     player1_second_rect = render_text_button(f"s:{player_1_assigned['Action'][1]}", font_medium, (30, 144, 255), 100, 650) # Green
-    player1_thrid_rect = render_text_button(f"d:{player_1_assigned['Action'][2]}", font_medium,(0,0,128), 100, 700)
+    player1_thrid_rect = render_text_button(f"d:{player_1_assigned['Action'][2]}", font_medium,(0,206,209), 100, 700)
     player2_first_rect = render_text_button(f"UP:{player_2_assigned['Action'][0]}", font_medium, (144,238,144), 700, 600) # Red
     player2_second_rect = render_text_button(f"DOWN:{player_2_assigned['Action'][1]}", font_medium, (124, 252, 0), 700, 650) # Green
-    player2_thrid_rect = render_text_button(f"LEFT:{player_2_assigned['Action'][2]}", font_medium,(0,100,0), 700, 700)
+    player2_thrid_rect = render_text_button(f"LEFT:{player_2_assigned['Action'][2]}", font_medium,(60,179,113), 700, 700)
     screen.blit(player_1_assigned['Loaded_Image'],player_1_rect)
     screen.blit(player_2_assigned['Loaded_Image'],player_2_rect)
     if 'overlay_text' in globals() and overlay_text is not None:
@@ -630,7 +632,7 @@ while running:
             if enter_button.mouse(event):
                 current_state = character_screen
     if current_state == character_screen:
-        draw_character_screen()
+        screen.blit(choose_character_background, (0,0))
         pathogen = ClickableSprite(gen_pathogen,200,200)
         immune_system = ClickableSprite(immune_sys, 700,200)
         screen.blit(pathogen.image,pathogen.rect)
