@@ -92,6 +92,8 @@ immune_sys = pygame.image.load('data/PlasmaBCell0001-blue.png')
 bacteria_image = pygame.image.load('data/GramNegativeBacteria0001.png')
 virus_image = pygame.image.load('data/SARSCoV20003-purple.png')
 parasite_image = pygame.image.load('data/TrypanosomaCruzi0001.png')
+choose_character_background = pygame.image.load ('data/4851806.jpg')
+choose_character_background = pygame.transform.scale(choose_character_background, (width,height))
 pathogen_background = pygame.image.load('data/dark_image.jpg')
 pathogen_background = pygame.transform.scale(pathogen_background, (width, height))
 innate_image = pygame.image.load('data/NeutrophilNetosis0001.png')
@@ -114,8 +116,6 @@ for key in pathogen_dict:
 #intro song
 sound = pygame.mixer.Sound('data/dramatic.wav')
 sound.set_volume(0.25)
-#play it on a loop
-sound.play(-1, 0)
 #end screen sounds
 doomsound = pygame.mixer.Sound('data/doom.wav')
 Success_sound = pygame.mixer.Sound('data/Success.mp3')
@@ -125,7 +125,10 @@ attack_sound.set_volume(1.0) # Can't make it louder
 defense_sound = pygame.mixer.Sound("data/myinstants.mp3")
 defense_sound.set_volume(1.0) # Can't make it louder 
 
-
+#set number of sound channels
+pygame.mixer.set_num_channels(8)
+attack_channel = pygame.mixer.Channel(1)
+defense_channel = pygame.mixer.Channel(2)
 
 
 #create character classes
@@ -145,7 +148,7 @@ def draw_start_screen():
     screen.blit(text, textRect)
 
 def draw_character_screen():
-    screen.fill((255,255,255))
+    screen.blit(choose_character_background, (0,0))
     screen.blit(text_char, textRect_char)
 
 def draw_pathogen_screen():
@@ -263,10 +266,11 @@ class RestartButton:
         surface.blit(text_surface, text_rect)
 
     def mouse(self, event):
-        global current_state
+        global current_state, start_music_playing, Success_sound, doomsound
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.rect.collidepoint(event.pos):
-                current_state = start_screen  
+                current_state = start_screen 
+                start_music_playing = False
         return False  
 
 # Creates the "Enter" button with its properties the hight variable positions the button on the screen
@@ -313,7 +317,7 @@ def handle_player_turn(player,opponent):
                     if event.key == pygame.K_a:
                         damage = int(player_1_assigned['Damage'][0])
                         if damage >= 1:
-                            attack_sound.play()
+                            attack_channel.play(attack_sound)
                             attack_mvmt(screen, player_1_assigned['Loaded_Image'], player_1_rect, direction='right')
                             if total_turns < 5:
                                 player2_health -= damage
@@ -338,7 +342,7 @@ def handle_player_turn(player,opponent):
                                     health_bar_player2.update(player2_health)
                             message = f"{player_1_assigned['Name']} dealt {damage} damage!"
                         else:
-                            defense_sound.play()
+                            defense_channel.play(defense_sound)
                             heal_mvmt(screen,player_1_assigned['Loaded_Image'],player_1_rect)
                             player1_health -= damage
                             health_bar_player1.update(player1_health)
@@ -348,7 +352,7 @@ def handle_player_turn(player,opponent):
                     elif event.key == pygame.K_s:
                         damage = int(player_1_assigned['Damage'][1])
                         if damage >= 1:
-                            attack_sound.play()
+                            attack_channel.play(attack_sound)
                             attack_mvmt(screen, player_1_assigned['Loaded_Image'], player_1_rect, direction='right')
                             if total_turns < 5:
                                 player2_health -= damage
@@ -373,7 +377,7 @@ def handle_player_turn(player,opponent):
                                     health_bar_player2.update(player2_health)
                             message = f"{player_1_assigned['Name']} dealt {damage} damage!"
                         else:
-                            defense_sound.play()
+                            defense_channel.play(defense_sound)
                             heal_mvmt(screen,player_1_assigned['Loaded_Image'],player_1_rect)
                             player1_health -= damage
                             health_bar_player1.update(player1_health)
@@ -383,7 +387,7 @@ def handle_player_turn(player,opponent):
                     elif event.key == pygame.K_d:
                         damage = int(player_1_assigned['Damage'][2])
                         if damage >= 1:
-                            attack_sound.play()
+                            attack_channel.play(attack_sound)
                             attack_mvmt(screen, player_1_assigned['Loaded_Image'], player_1_rect, direction='right')
                             if total_turns < 5:
                                 player2_health -= damage
@@ -408,7 +412,7 @@ def handle_player_turn(player,opponent):
                                     health_bar_player2.update(player2_health)
                             message = f"{player_1_assigned['Name']} dealt {damage} damage!"
                         else:
-                            defense_sound.play()
+                            defense_channel.play(defense_sound)
                             heal_mvmt(screen,player_1_assigned['Loaded_Image'],player_1_rect)
                             player1_health -= damage
                             health_bar_player1.update(player1_health)
@@ -419,7 +423,7 @@ def handle_player_turn(player,opponent):
                     if event.key == pygame.K_UP:
                         damage = int(player_2_assigned['Damage'][0])
                         if damage >= 1:
-                            attack_sound.play()
+                            attack_channel.play(attack_sound)
                             attack_mvmt(screen, player_2_assigned['Loaded_Image'], player_2_rect, direction='left')
                             if total_turns < 5:
                                 player1_health -= damage
@@ -444,7 +448,7 @@ def handle_player_turn(player,opponent):
                                     health_bar_player1.update(player1_health)
                             message = f"{player_2_assigned['Name']} dealt {damage} damage!"
                         else:
-                            defense_sound.play()
+                            defense_channel.play(defense_sound)
                             heal_mvmt(screen,player_2_assigned['Loaded_Image'],player_2_rect)
                             player2_health -= damage
                             health_bar_player2.update(player2_health)
@@ -454,7 +458,7 @@ def handle_player_turn(player,opponent):
                     elif event.key == pygame.K_DOWN:
                         damage = int(player_2_assigned['Damage'][1])
                         if damage >= 1:
-                            attack_sound.play()
+                            attack_channel.play(attack_sound)
                             attack_mvmt(screen, player_2_assigned['Loaded_Image'], player_2_rect, direction='left')
                             if total_turns < 5:
                                 player1_health -= damage
@@ -479,7 +483,7 @@ def handle_player_turn(player,opponent):
                                     health_bar_player1.update(player1_health)
                             message = f"{player_2_assigned['Name']} dealt {damage} damage!"
                         else:
-                            defense_sound.play()
+                            defense_channel.play(defense_sound)
                             heal_mvmt(screen,player_2_assigned['Loaded_Image'],player_2_rect)
                             player2_health -= damage
                             health_bar_player2.update(player2_health)
@@ -489,7 +493,7 @@ def handle_player_turn(player,opponent):
                     elif event.key == pygame.K_LEFT:
                         damage = int(player_2_assigned['Damage'][2])
                         if damage >= 1:
-                            attack_sound.play()
+                            attack_channel.play(attack_sound)
                             attack_mvmt(screen, player_2_assigned['Loaded_Image'], player_2_rect, direction='left')
                             if total_turns < 5:
                                 player1_health -= damage
@@ -514,7 +518,7 @@ def handle_player_turn(player,opponent):
                                     health_bar_player1.update(player1_health)
                             message = f"{player_2_assigned['Name']} dealt {damage} damage!"
                         else:
-                            defense_sound.play()
+                            defense_channel.play(defense_sound)
                             heal_mvmt(screen,player_2_assigned['Loaded_Image'],player_2_rect)
                             player2_health -= damage
                             health_bar_player2.update(player2_health)
@@ -663,12 +667,13 @@ fight_screen = 4
 immune_sys_win = 5
 pathogen_win = 6
 
-#starting game loop
+
 running = True
 current_state = start_screen
 timer = pygame.time.get_ticks()
 transition_time = 0
-#start screen
+start_music_playing = False
+#start game loop
 while running:
     events = pygame.event.get()
     for event in events:
@@ -676,6 +681,12 @@ while running:
             pygame.quit()
             sys.exit()
     if current_state == start_screen:
+        if not start_music_playing:
+            sound.play(-1,0)
+            start_music_playing = True
+        #don't play end screen sounds if looping game
+        Success_sound.stop()
+        doomsound.stop()
         screen.blit(background_image, (0, 0))
         # this is the helper function allowing to write mulitple lines. 
         draw_multiline_text(screen, text, font, (0, 0, 0), (0, 0))
@@ -801,6 +812,7 @@ while running:
         draw_fight_screen()
         player_fight()
     if current_state == immune_sys_win:
+        start_music_playing = False
         #play sound
         sound.stop()
         Success_sound.play(-1, 0)
@@ -814,8 +826,10 @@ while running:
         for event in events:
             # Check if the restart button is clicked
             if Restart_button.mouse(event):
-                current_state = character_screen
+                current_state = start_screen
+                start_music_playing = False
     if current_state == pathogen_win:
+        start_music_playing = False
         #play sound
         sound.stop()
         doomsound.play(-1, 0)
@@ -829,7 +843,8 @@ while running:
         for event in events:
             # Check if the restart button is clicked
             if Restart_button.mouse(event):
-                current_state = character_screen
+                current_state = start_screen
+                start_music_playing = False
 
     
     pygame.display.flip()
