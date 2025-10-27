@@ -176,12 +176,12 @@ def draw_fight_screen(overlay_text=None,message_text=None):
     render_text_button(f" {player_1_assigned['Name']}: {player1_health}", font_small, (255, 255, 255), 20, 120)
     render_text_button(f"{player_2_assigned['Name']}: {player2_health}", font_small, (255, 255, 255), 800, 120)
     render_text_button("Choose your action:", font_medium, (255, 255, 255), 450, 200)
-    player1_first_rect = render_text_button(f"a:{player_1_assigned['Action'][0]}", font_medium, (255, 0, 0), 100, 600) # Red
-    player1_second_rect = render_text_button(f"s:{player_1_assigned['Action'][1]}", font_medium, (0, 255, 0), 100, 650) # Green
-    player1_thrid_rect = render_text_button(f"d:{player_1_assigned['Action'][2]}", font_medium,(0,200,255), 100, 700)
-    player2_first_rect = render_text_button(f"UP:{player_2_assigned['Action'][0]}", font_medium, (255, 0, 0), 700, 600) # Red
-    player2_second_rect = render_text_button(f"DOWN:{player_2_assigned['Action'][1]}", font_medium, (0, 255, 0), 700, 650) # Green
-    player2_thrid_rect = render_text_button(f"LEFT:{player_2_assigned['Action'][2]}", font_medium,(0,200,255), 700, 700)
+    player1_first_rect = render_text_button(f"a:{player_1_assigned['Action'][0]}", font_medium, (0, 255, 255), 100, 600) # Red
+    player1_second_rect = render_text_button(f"s:{player_1_assigned['Action'][1]}", font_medium, (30, 144, 255), 100, 650) # Green
+    player1_thrid_rect = render_text_button(f"d:{player_1_assigned['Action'][2]}", font_medium,(0,206,209), 100, 700)
+    player2_first_rect = render_text_button(f"UP:{player_2_assigned['Action'][0]}", font_medium, (144, 238, 144), 700, 600) # Red
+    player2_second_rect = render_text_button(f"DOWN:{player_2_assigned['Action'][1]}", font_medium, (124, 252, 0), 700, 650) # Green
+    player2_thrid_rect = render_text_button(f"LEFT:{player_2_assigned['Action'][2]}", font_medium,(60,179,113), 700, 700)
     screen.blit(player_1_assigned['Loaded_Image'],player_1_rect)
     screen.blit(player_2_assigned['Loaded_Image'],player_2_rect)
     if 'overlay_text' in globals() and overlay_text is not None:
