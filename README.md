@@ -39,8 +39,10 @@ The pathogen selection screen will allow the player playing as the pathogen to s
 The player number is determined by the order, with the first player to select on the character screen being 'player one.' After player one chooses their character, the screen will progress automatically to the selection screen of the type player one did not choose. 
 
 ### Immune System Selection Screen
-The immune system selection screen will allow the player playing as the immune system to select their 'character' from two clickable icons: innate or adaptive. This screen works the same as the pathogen seleciton screen
+The immune system selection screen will allow the player playing as the immune system to select their 'character' from two clickable icons: innate or adaptive. This screen works the same as the pathogen selection screen.
 
 ### Fight Screen
+Once in the fight screen, player 1 selects between their attack or defense options if available to them using the keyboard keys a,s or d. Once player 1's turn concludes, then player 2 can select between their options utilizing the up, down, and left arrows. This will continue until a player is defeated. 
 
 ### End Screen
+This last screen recognized the individuals who put this together. It also has a restart button that takes you back to the start screen of the game. 
