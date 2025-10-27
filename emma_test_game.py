@@ -115,7 +115,8 @@ for key in pathogen_dict:
 ####SOUNDS####
 #intro song
 sound = pygame.mixer.Sound('data/dramatic.wav')
-sound.set_volume(0.25)
+#gameplay/character choice sound
+start_sound = pygame.mixer.Sound('data/gameplaysong.wav')
 #end screen sounds
 doomsound = pygame.mixer.Sound('data/doom.wav')
 Success_sound = pygame.mixer.Sound('data/Success.mp3')
@@ -270,7 +271,6 @@ class RestartButton:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.rect.collidepoint(event.pos):
                 current_state = start_screen 
-                start_music_playing = False
         return False  
 
 # Creates the "Enter" button with its properties the hight variable positions the button on the screen
@@ -673,6 +673,7 @@ current_state = start_screen
 timer = pygame.time.get_ticks()
 transition_time = 0
 start_music_playing = False
+end_screen_music = False
 #start game loop
 while running:
     events = pygame.event.get()
@@ -681,6 +682,11 @@ while running:
             pygame.quit()
             sys.exit()
     if current_state == start_screen:
+        current_choice = ''
+        player_1_assigned = ''
+        player_2_assigned = ''
+        end_screen_music = False
+        sound.set_volume(0.25)
         if not start_music_playing:
             sound.play(-1,0)
             start_music_playing = True
@@ -812,10 +818,11 @@ while running:
         draw_fight_screen()
         player_fight()
     if current_state == immune_sys_win:
-        start_music_playing = False
         #play sound
-        sound.stop()
-        Success_sound.play(-1, 0)
+        sound.set_volume(0.0)
+        if not end_screen_music:
+            Success_sound.play(-1,0)
+            end_screen_music = True
         #load in background
         background_object_imm.update()
         background_object_imm.render(screen)
@@ -827,12 +834,12 @@ while running:
             # Check if the restart button is clicked
             if Restart_button.mouse(event):
                 current_state = start_screen
-                start_music_playing = False
     if current_state == pathogen_win:
-        start_music_playing = False
         #play sound
-        sound.stop()
-        doomsound.play(-1, 0)
+        sound.set_volume(0.0)
+        if not end_screen_music:
+            doomsound.play(-1,0)
+            end_screen_music = True
         #load in background
         background_object_path.update()
         background_object_path.render(screen)
@@ -844,7 +851,6 @@ while running:
             # Check if the restart button is clicked
             if Restart_button.mouse(event):
                 current_state = start_screen
-                start_music_playing = False
 
     
     pygame.display.flip()
