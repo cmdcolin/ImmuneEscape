@@ -335,7 +335,7 @@ def handle_player_turn(player,opponent):
                                 else:
                                     damage = damage - 2
                                     player2_health -= damage
-                                    health_bar_player2(player2_health)
+                                    health_bar_player2.update(player2_health)
                             message = f"{player_1_assigned['Name']} dealt {damage} damage!"
                         else:
                             defense_sound.play()
