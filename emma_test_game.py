@@ -27,6 +27,8 @@ font_small = pygame.font.SysFont(None, 30)
 
 button_font = pygame.font.SysFont(None, 50)
 
+restar_button_font = pygame.font.SysFont(None, 50)
+
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 RED = (255,0,0)
@@ -108,12 +110,22 @@ for key in pathogen_dict:
     pathogen_dict[key]['Loaded_Image'] = pygame.transform.scale(pathogen_dict[key]['Loaded_Image'], (300,300))
 
 
-# We can add sound to play in
+####SOUNDS####
+#intro song
 sound = pygame.mixer.Sound('data/dramatic.wav')
+sound.set_volume(0.25)
+#play it on a loop
+sound.play(-1, 0)
+#end screen sounds
 doomsound = pygame.mixer.Sound('data/doom.wav')
 Success_sound = pygame.mixer.Sound('data/Success.mp3')
+#action sounds
+attack_sound = pygame.mixer.Sound("data/blue Beep.mp3")
+attack_sound.set_volume(1.0) # Can't make it louder 
+defense_sound = pygame.mixer.Sound("data/myinstants.mp3")
+defense_sound.set_volume(1.0) # Can't make it louder 
 
-sound.play(-1, 0)
+
 
 
 #create character classes
@@ -220,8 +232,45 @@ def heal_mvmt(screen, atacker_image, attacker_rect,distance=50,speed=5):
         draw_fight_screen()
         pygame.display.update()
         pygame.time.delay(10)
+        
+class RestartButton:
+    # Initializes the button with its properties
+    def __init__(self, text, x, y, width, height, color, hover_color, font, font_color):
+        self.text = text  # The text displayed on the button
+        self.x = x  
+        self.y = y  
+        self.width = width  
+        self.height = height 
+        self.color = color  
+        self.hover_color = hover_color  
+        self.font = font  
+        self.font_color = font_color  
+        self.rect = pygame.Rect(x, y, width, height) 
 
+    # Draws the button on the screen
+    def draw(self, surface):
+        mouse_pos = pygame.mouse.get_pos()  # Get the current position of the mouse. the mouse position on the screen
+        if self.rect.collidepoint(mouse_pos):
+            pygame.draw.rect(surface, self.hover_color, self.rect)  #The hover color 
+        else:
+            pygame.draw.rect(surface, self.color, self.rect)  # the button without the hover colore
 
+        # the buttons text 
+        text_surface = self.font.render(self.text, True, self.font_color)
+        # this centers the button on the game sureface 
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        # puts the text on the button
+        surface.blit(text_surface, text_rect)
+
+    def mouse(self, event):
+        global current_state
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.rect.collidepoint(event.pos):
+                current_state = start_screen  
+        return False  
+
+# Creates the "Enter" button with its properties the hight variable positions the button on the screen
+Restart_button = RestartButton("Restart", width // 2 - 100, height - 150, 200, 50, (0, 128, 0), (255, 0, 0), restar_button_font, (255, 255, 255))
 
 #function for handling player turns
 message = ''
@@ -230,6 +279,28 @@ MESSAGE_DURATION = 200
 clock = pygame.time.Clock()
 def handle_player_turn(player,opponent):
     global player1_health, player2_health, total_turns, message_timer, message
+    #created halth bar(has to be right above game loop) 
+    class HealthBar():
+        def __init__(self,x,y,w,h,current_hp,max_hp,font):
+            self.x=x
+            self.y=y
+            self.w=w
+            self.h=h
+            self.hp=current_hp
+            self.max_hp=max_hp
+            self.font = font
+        def update(self, new_hp):
+            self.hp = max(0, min(new_hp, self.max_hp))
+        def draw(self, surface):
+            ratio = max(0, self.hp / self.max_hp)
+            pygame.draw.rect(surface, "RED",(self.x, self.y, self.w, self.h))
+            pygame.draw.rect(surface, "GREEN", (self.x, self.y, self.w*ratio, self.h))
+            hp_text = f"{int(self.hp)}/{self.max_hp}"
+            text_surf = self.font.render(hp_text, True, (255,255,255))
+            text_rect = text_surf.get_rect(center = (self.x + self.w // 2, self.y + self.h//2))
+            surface.blit(text_surf, text_rect)
+    health_bar_player1 = HealthBar(20,170,300,40,player1_health,max_player1_health,font_small)
+    health_bar_player2= HealthBar(800,170,300,40,player2_health,max_player2_health,font_small)
     #turn based loops
     isturnover = False
     while not isturnover:
@@ -242,81 +313,105 @@ def handle_player_turn(player,opponent):
                     if event.key == pygame.K_a:
                         damage = int(player_1_assigned['Damage'][0])
                         if damage >= 1:
+                            attack_sound.play()
                             attack_mvmt(screen, player_1_assigned['Loaded_Image'], player_1_rect, direction='right')
                             if total_turns < 5:
                                 player2_health -= damage
+                                health_bar_player2.update(player2_health)
                             if 5 <= total_turns < 11:
                                 if player_1_assigned['Name'] == 'Adaptive Immune System':
                                     damage = damage + 2
                                     player2_health -= damage
+                                    health_bar_player2.update(player2_health)
                                 else:
                                     damage = damage - 1
                                     player2_health -= damage
+                                    health_bar_player2.update(player2_health)
                             if total_turns >= 11:
                                 if player_1_assigned['Name'] == 'Adaptive Immune System':
                                     damage = damage +3
                                     player2_health -= damage
+                                    health_bar_player2.update(player2_health)
                                 else:
                                     damage = damage - 2
                                     player2_health -= damage
+                                    health_bar_player2(player2_health)
                             message = f"{player_1_assigned['Name']} dealt {damage} damage!"
                         else:
+                            defense_sound.play()
                             heal_mvmt(screen,player_1_assigned['Loaded_Image'],player_1_rect)
                             player1_health -= damage
+                            health_bar_player1.update(player1_health)
                             message = f"{player_1_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True
                     elif event.key == pygame.K_s:
                         damage = int(player_1_assigned['Damage'][1])
                         if damage >= 1:
+                            attack_sound.play()
                             attack_mvmt(screen, player_1_assigned['Loaded_Image'], player_1_rect, direction='right')
                             if total_turns < 5:
                                 player2_health -= damage
+                                health_bar_player2.update(player2_health)
                             if 5 <= total_turns < 11:
                                 if player_1_assigned['Name'] == 'Adaptive Immune System':
                                     damage = damage + 2
                                     player2_health -= damage
+                                    health_bar_player2.update(player2_health)
                                 else:
                                     damage = damage - 1
                                     player2_health -= damage
+                                    health_bar_player2.update(player2_health)
                             if total_turns >= 11:
                                 if player_1_assigned['Name'] == 'Adaptive Immune System':
                                     damage = damage +3
                                     player2_health -= damage
+                                    health_bar_player2.update(player2_health)
                                 else:
                                     damage = damage - 2
                                     player2_health -= damage
+                                    health_bar_player2.update(player2_health)
                             message = f"{player_1_assigned['Name']} dealt {damage} damage!"
                         else:
+                            defense_sound.play()
                             heal_mvmt(screen,player_1_assigned['Loaded_Image'],player_1_rect)
                             player1_health -= damage
+                            health_bar_player1.update(player1_health)
                             message = f"{player_1_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True
                     elif event.key == pygame.K_d:
                         damage = int(player_1_assigned['Damage'][2])
                         if damage >= 1:
+                            attack_sound.play()
                             attack_mvmt(screen, player_1_assigned['Loaded_Image'], player_1_rect, direction='right')
                             if total_turns < 5:
                                 player2_health -= damage
+                                health_bar_player2.update(player2_health)
                             if 5 <= total_turns < 11:
                                 if player_1_assigned['Name'] == 'Adaptive Immune System':
                                     damage = damage + 2
                                     player2_health -= damage
+                                    health_bar_player2.update(player2_health)
                                 else:
                                     damage = damage - 1
                                     player2_health -= damage
+                                    health_bar_player2.update(player2_health)
                             if total_turns >= 11:
                                 if player_1_assigned['Name'] == 'Adaptive Immune System':
                                     damage = damage +3
                                     player2_health -= damage
+                                    health_bar_player2.update(player2_health)
                                 else:
                                     damage = damage - 2
                                     player2_health -= damage
+                                    health_bar_player2.update(player2_health)
                             message = f"{player_1_assigned['Name']} dealt {damage} damage!"
                         else:
+                            defense_sound.play()
                             heal_mvmt(screen,player_1_assigned['Loaded_Image'],player_1_rect)
                             player1_health -= damage
+                            health_bar_player1.update(player1_health)
                             message = f"{player_1_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True
@@ -324,81 +419,105 @@ def handle_player_turn(player,opponent):
                     if event.key == pygame.K_UP:
                         damage = int(player_2_assigned['Damage'][0])
                         if damage >= 1:
+                            attack_sound.play()
                             attack_mvmt(screen, player_2_assigned['Loaded_Image'], player_2_rect, direction='left')
                             if total_turns < 5:
                                 player1_health -= damage
+                                health_bar_player1.update(player1_health)
                             if 5 <= total_turns < 11:
                                 if player_2_assigned['Name'] == 'Adaptive Immune System':
                                     damage = damage + 2
                                     player1_health -= damage
+                                    health_bar_player1.update(player1_health)
                                 else:
                                     damage = damage - 1
                                     player1_health -= damage
+                                    health_bar_player1.update(player1_health)
                             if total_turns >= 11:
                                 if player_2_assigned['Name'] == 'Adaptive Immune System':
                                     damage = damage +3
                                     player1_health -= damage
+                                    health_bar_player1.update(player1_health)
                                 else:
                                     damage = damage - 2
                                     player1_health -= damage
+                                    health_bar_player1.update(player1_health)
                             message = f"{player_2_assigned['Name']} dealt {damage} damage!"
                         else:
+                            defense_sound.play()
                             heal_mvmt(screen,player_2_assigned['Loaded_Image'],player_2_rect)
                             player2_health -= damage
+                            health_bar_player2.update(player2_health)
                             message = f"{player_2_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True
                     elif event.key == pygame.K_DOWN:
                         damage = int(player_2_assigned['Damage'][1])
                         if damage >= 1:
+                            attack_sound.play()
                             attack_mvmt(screen, player_2_assigned['Loaded_Image'], player_2_rect, direction='left')
                             if total_turns < 5:
                                 player1_health -= damage
+                                health_bar_player1.update(player1_health)
                             if 5 <= total_turns < 11:
                                 if player_2_assigned['Name'] == 'Adaptive Immune System':
                                     damage = damage + 2
                                     player1_health -= damage
+                                    health_bar_player1.update(player1_health)
                                 else:
                                     damage = damage - 1
                                     player1_health -= damage
+                                    health_bar_player1.update(player1_health)
                             if total_turns >= 11:
                                 if player_2_assigned['Name'] == 'Adaptive Immune System':
                                     damage = damage +3
                                     player1_health -= damage
+                                    health_bar_player1.update(player1_health)
                                 else:
                                     damage = damage - 2
                                     player1_health -= damage
+                                    health_bar_player1.update(player1_health)
                             message = f"{player_2_assigned['Name']} dealt {damage} damage!"
                         else:
+                            defense_sound.play()
                             heal_mvmt(screen,player_2_assigned['Loaded_Image'],player_2_rect)
                             player2_health -= damage
+                            health_bar_player2.update(player2_health)
                             message = f"{player_2_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True
                     elif event.key == pygame.K_LEFT:
                         damage = int(player_2_assigned['Damage'][2])
                         if damage >= 1:
+                            attack_sound.play()
                             attack_mvmt(screen, player_2_assigned['Loaded_Image'], player_2_rect, direction='left')
                             if total_turns < 5:
                                 player1_health -= damage
+                                health_bar_player1.update(player1_health)
                             if 5 <= total_turns < 11:
                                 if player_2_assigned['Name'] == 'Adaptive Immune System':
                                     damage = damage + 2
                                     player1_health -= damage
+                                    health_bar_player1.update(player1_health)
                                 else:
                                     damage = damage - 1
                                     player1_health -= damage
+                                    health_bar_player1.update(player1_health)
                             if total_turns >= 11:
                                 if player_2_assigned['Name'] == 'Adaptive Immune System':
                                     damage = damage +3
                                     player1_health -= damage
+                                    health_bar_player1.update(player1_health)
                                 else:
                                     damage = damage - 2
                                     player1_health -= damage
+                                    health_bar_player1.update(player1_health)
                             message = f"{player_2_assigned['Name']} dealt {damage} damage!"
                         else:
+                            defense_sound.play()
                             heal_mvmt(screen,player_2_assigned['Loaded_Image'],player_2_rect)
                             player2_health -= damage
+                            health_bar_player2.update(player2_health)
                             message = f"{player_2_assigned['Name']} healed {abs(damage)} HP!"
                         message_timer = pygame.time.get_ticks()
                         isturnover = True
@@ -407,6 +526,8 @@ def handle_player_turn(player,opponent):
             draw_fight_screen(overlay_text=overlay_text, message_text=message)
             if message != '':
                 render_text_button(message, font_medium, (255,255,0), None, 250)
+            health_bar_player1.draw(screen)
+            health_bar_player2.draw(screen)
             pygame.display.update()
             clock.tick(30)
 
@@ -673,8 +794,10 @@ while running:
     if current_state == fight_screen:
         player_1_rect = player_1_assigned['Loaded_Image'].get_rect(topleft=(100, 300))
         player_2_rect = player_2_assigned['Loaded_Image'].get_rect(topleft=(800,300))
-        player1_health = int(player_1_assigned['Health'])
-        player2_health = int(player_2_assigned['Health'])
+        max_player1_health = int(player_1_assigned['Health'])
+        max_player2_health = int(player_2_assigned['Health'])
+        player1_health=max_player1_health
+        player2_health=max_player2_health
         draw_fight_screen()
         player_fight()
     if current_state == immune_sys_win:
@@ -686,6 +809,12 @@ while running:
         background_object_imm.render(screen)
         #Draw multi-line text at the center of the screen
         draw_multiline_text(screen, imm_text, font, (0, 0, 0), (0, 0))
+        #Places the enter button created above into the game loop
+        Restart_button.draw(screen)
+        for event in events:
+            # Check if the restart button is clicked
+            if Restart_button.mouse(event):
+                current_state = character_screen
     if current_state == pathogen_win:
         #play sound
         sound.stop()
@@ -695,6 +824,13 @@ while running:
         background_object_path.render(screen)
         #Draw multi-line text at the center of the screen
         draw_multiline_text(screen, path_text, font, (255, 255, 255), (0, 0))
+        #Places the enter button created above into the game loop
+        Restart_button.draw(screen)
+        for event in events:
+            # Check if the restart button is clicked
+            if Restart_button.mouse(event):
+                current_state = character_screen
+
     
     pygame.display.flip()
     fpsClock.tick(fps)
