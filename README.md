@@ -12,20 +12,23 @@ Each player category (immune system or pathogen) is encoded in a dictionary of d
 Dictionary: Immune System or Pathogen
   Keys: 'Character' Dicitonaries (i.e. virus, bacteria, parasite for the pathogen dictionary)
     Keys: Attributes of the Character (Actions, Damage, Health, Image)
-      Lists: Of possible actions, damage amounts, starting health, image path
+      Lists: Of possible actions, damage amounts, starting health, and image paths.
 
 ## Text and Image Import
-In this section we specify all text that is used and render the text objects for display on the screen.
-We do the same for all images, specifying in the image path and assigning them to variables that can be rendered on the appropriate screen.
+In this section, we specify all the text used and render the text objects for display on the screen.
+We do the same for all images, specifying the image path and assigning them to variables that can be rendered on the appropriate screen.
 
 ## Creating Clickable Icons
-We created a class of clickable icons that are used during the character selection process
+We created a class of clickable icons that are used during the character selection process.
 
 ## Drawing Screens
 We created functions that will 'draw' the desired screens that we use at different points in the game, and then set those states as arbitrary values so that they can be defined and called upon during the game loop.
 
 ## Game Loop
 ### Start Screen
+
+### Gameplay screen
+It's an overview of the gameplay--character selection screen, and the keys that the game uses as input for the battle. 
 
 ### Character Selection Screen
 The character selection screen contains clickable icons that will assign player one and player two to either the pathogen or immune system, which they will select themselves. Once the icon is selected, text displaying their choice appears for two seconds before the screen changes to the corresponding selection screen. The icon they click on will choose which screen they will be directed to next by changing the variable 'current_state,' which specifies the screen. 
