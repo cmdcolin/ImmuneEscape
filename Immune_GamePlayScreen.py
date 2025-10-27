@@ -82,10 +82,10 @@ def draw_multiline_text(surface, text, font, color, pos, line_spacing=5):
 ################ Adding Game Play Instructions ####################################
 
 # Multi-line text to display
-text = "\nGAMEPLAY\n\n\nHow to play\n\nPlayer 1:\nChoose either Pathogen or Immune cell and then your avatar.\n\nPlayer 2:\nChoose your avatar.\n\nLet the Immune Battle Begin"
+text = "\nGAMEPLAY\n\n\nHow to play\n\nPlayer 1:\nChoose either Pathogen or Immune cell and then your avatar.\nBattle Keys: a,s, & d\n\nPlayer 2:\nChoose your avatar.\nBattle Keys:Up, Down, Left\n\nLet the Immune Battle Begin!!!"
 
 # Creates the "Enter" button with its properties the hight variable positions the button on the screen
-enter_button = Button("Continue", width // 2 - 100, height - 150, 200, 50, (255, 255, 255), (255, 0, 0), button_font, (0, 0, 0))
+enter_button = Button("Continue", width // 2 - 100, height - 125, 200, 50, (255, 255, 255), (255, 0, 0), button_font, (0, 0, 0))
 
 sound.play(-1, 0)
 
